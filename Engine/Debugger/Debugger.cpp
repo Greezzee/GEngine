@@ -44,6 +44,18 @@ bool Debugger::DrawCollider(const SquareCollider& col, float points_size, float 
 	return true;
 }
 
+bool Debugger::DrawCollider(const PolygonCollider& col, float points_size, float line_thick, unsigned view_id, Color color, unsigned layer)
+{
+	unsigned col_s = col.GetPointsCount();
+	for (int i = 0; i < col_s; i++) {
+		if (!DrawPoint(col.GetPoint(i), points_size, view_id, color, layer))
+			return false;
+		if (!DrawLine(col.GetPoint(i), col.GetPoint((i + 1) % col_s), line_thick, view_id, color, layer))
+			return false;
+	}
+	return true;
+}
+
 bool Debugger::DrawCollider(const CircleCollider& col, unsigned view_id, Color color, unsigned layer)
 {
 	DrawData circle;

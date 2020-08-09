@@ -2,6 +2,7 @@
 #include "EllipseCollider.h"
 #include "SquareCollider.h"
 #include "CircleCollider.h"
+#include "PolygonCollider.h"
 
 namespace ge {
 	class Collider
@@ -28,11 +29,13 @@ namespace ge {
 		//! Проверяет, пересекаются ли данный круг и данный прямоугольник
 		static bool IsCollide(SquareCollider* a, CircleCollider* b);
 
+		//! Проверяет, пересекаются ли два данных многоугольника
+		static bool IsCollide(PolygonCollider* a, PolygonCollider* b);
+
 		//! Выпускает из центра коллайдера a вектор в направлении direction
 		//! Определяет, сколько должен пройти коллайдер a в направлении данного вектора, чтобы столкнуться в b
 		//! Вернёт искомое расстояние в тех же единицах, в которых заданы коллайдеры
 		//! Вернёт NAN, если при движении в данном направлении, a никогда не встретит b
-		//! НЕ РАБОТАЕТ
 		static float DistanceBetween(SquareCollider* a, SquareCollider* b, const Vector2F& direction);
 
 		//! Выпускает из центра коллайдера a вектор в направлении direction
@@ -46,8 +49,13 @@ namespace ge {
 		//! Определяет, сколько должен пройти коллайдер a в направлении данного вектора, чтобы столкнуться в b
 		//! Вернёт искомое расстояние в тех же единицах, в которых заданы коллайдеры
 		//! Вернёт NAN, если при движении в данном направлении, a никогда не встретит b
-
 		static float DistanceBetween(CircleCollider* a, CircleCollider* b, const Vector2F& direction);
+
+		//! Выпускает из центра коллайдера a вектор в направлении direction
+		//! Определяет, сколько должен пройти коллайдер a в направлении данного вектора, чтобы столкнуться в b
+		//! Вернёт искомое расстояние в тех же единицах, в которых заданы коллайдеры
+		//! Вернёт NAN, если при движении в данном направлении, a никогда не встретит b
+		static float DistanceBetween(PolygonCollider* a, PolygonCollider* b, const Vector2F& direction);
 
 	private:
 
@@ -56,5 +64,11 @@ namespace ge {
 
 		//! Лучше не спрашивайте... И НИКОГДА НЕ ТРОГАЙТЕ
 		static Vector2F AxisDistance(SquareCollider* a, SquareCollider* b, const Vector2F& norm, const Vector2F& dir);
+
+		//! Проверяет пересечение двух коллайдеров по оси norm
+		static bool AxisIntersect(PolygonCollider* a, PolygonCollider* b, const Vector2F& norm);
+
+		//! Лучше не спрашивайте... И НИКОГДА НЕ ТРОГАЙТЕ
+		static Vector2F AxisDistance(PolygonCollider* a, PolygonCollider* b, const Vector2F& norm, const Vector2F& dir);
 	};
 }

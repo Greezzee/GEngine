@@ -8,9 +8,10 @@ class TestScene : public Scene
 public:
 	void Init() override 
 	{
-		a.Init(Vector2F(100, 100), 50);
-		b.Init(Vector2F(400, 400), 150);
-		c.Init(Vector2F(680, 500), 75);
+		std::vector<Vector2F> p = { {-70, -70}, {100, -100}, {60, -20}, {0, 100}, {-50, 150} };
+		a.Init(Vector2F(100, 100), p);
+		b.Init(Vector2F(400, 400), 150 * Vector2F(1, 1));
+		c.Init(Vector2F(680, 500), 75 * Vector2F(1, 1));
 		InputManager::LinkToCode(KeyboardKey::W, 0);
 		InputManager::LinkToCode(KeyboardKey::A, 1);
 		InputManager::LinkToCode(KeyboardKey::S, 2);
@@ -50,24 +51,22 @@ public:
 		speed = speed.Normalized();
 
 		a.SetPos(a.GetPos() + speed * 200 * TimeManager::GetDeltaTimeF());
-		//a.SetAngle(a.GetAngle() + rot * TimeManager::GetDeltaTimeF());
-
-		GraphicManager::GetView(1)->virtual_position = a.GetPos();
-		Debugger::DrawCollider(a, 1);
-		Debugger::DrawCollider(b, 1);
-		Debugger::DrawLine(a.GetPos() + Vector2F(0, a.GetRadius()) - Vector2F(1000, 0), a.GetPos() + Vector2F(0, a.GetRadius()) + Vector2F(1000, 0), 1, 1, Color::Green());
-		Debugger::DrawLine(a.GetPos() - Vector2F(0, a.GetRadius()) - Vector2F(1000, 0), a.GetPos() - Vector2F(0, a.GetRadius()) + Vector2F(1000, 0), 1, 1, Color::Green());
+		a.SetAngle(a.GetAngle() + rot * TimeManager::GetDeltaTimeF());
+		Debugger::DrawCollider(a, 10, 4);
+		Debugger::DrawCollider(b, 10, 4);
+		//Debugger::DrawLine(a.GetPos() + Vector2F(0, a.GetRadius()) - Vector2F(1000, 0), a.GetPos() + Vector2F(0, a.GetRadius()) + Vector2F(1000, 0), 1, 1, Color::Green());
+		//Debugger::DrawLine(a.GetPos() - Vector2F(0, a.GetRadius()) - Vector2F(1000, 0), a.GetPos() - Vector2F(0, a.GetRadius()) + Vector2F(1000, 0), 1, 1, Color::Green());
 
 
-		float dist = Collider::DistanceBetween(&a, &b, { 1, 0 });
+		float dist = Collider::DistanceBetween(&a, &PolygonCollider(b), { 1, 0 });
 		printf("%g\n", dist);
-		if (fabsf(dist) < 20) {
-			Debugger::DrawLine(a.GetPos(), b.GetPos(), 4, 1, Color::Red());
+		if (fabsf(dist) < 10) {
+			Debugger::DrawLine(a.GetPos(), b.GetPos(), 4, 0, Color::Red());
 		}
 		for (int i = 0; i < 2000; i += 100)
-			Debugger::DrawLine({ (float)i, 0 }, { (float)i, 1000 }, 1, 0);
+			Debugger::DrawLine({ (float)i, 0 }, { (float)i, 1000 }, 1);
 		for (int i = 0; i < 2000; i += 100)
-			Debugger::DrawLine({ 0, (float)i }, {2000, (float)i }, 1, 0);
+			Debugger::DrawLine({ 0, (float)i }, {2000, (float)i }, 1);
 		
 		if (InputManager::IsPressed(6))
 			SceneManager::CloseScene(this);
@@ -77,7 +76,8 @@ public:
 		printf("Close!\n");
 	}
 private:
-	CircleCollider a, b, c;
+	PolygonCollider a;
+	SquareCollider b, c;
 };
 
 int main()

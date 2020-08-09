@@ -241,6 +241,37 @@ bool Collider::IsCollide(CircleCollider* a, CircleCollider* b)
 	return Vector2F(a->_pos - b->_pos).SqrMagnitude() <= sqr(a->_radius + b->_radius);
 }
 
+bool Collider::IsCollide(PolygonCollider* a, PolygonCollider* b)
+{
+	unsigned a_s = a->_points.size();
+	unsigned b_s = b->_points.size();
+	for (unsigned i = 0; i < a_s; i++) {
+		Vector2F side = a->_points[i] - a->_points[(i + 1) % a_s];
+		Vector2F norm;
+		if (fabsf(side.y) < EPS)
+			norm = { 0, 1 };
+		else
+			norm = { 1, -side.x / side.y };
+
+		if (!AxisIntersect(a, b, norm))
+			return false;
+	}
+
+	for (unsigned i = 0; i < b_s; i++) {
+		Vector2F side = b->_points[i] - b->_points[(i + 1) % b_s];
+		Vector2F norm;
+		if (fabsf(side.y) < EPS)
+			norm = { 0, 1 };
+		else
+			norm = { 1, -side.x / side.y };
+
+		if (!AxisIntersect(a, b, norm))
+			return false;
+	}
+
+	return true;
+}
+
 bool Collider::IsCollide(CircleCollider* a, SquareCollider* b)
 {
 	/*
@@ -338,4 +369,126 @@ float Collider::DistanceBetween(CircleCollider* a, CircleCollider* b, const Vect
 		return NAN;
 
 	return sign(pos_b.x) * (fabsf(pos_b.x) - sqrtf(sqr(a->_radius + b->_radius) - sqr(pos_b.y)));
+}
+
+float Collider::DistanceBetween(PolygonCollider* a, PolygonCollider* b, const Vector2F& direction)
+{
+	unsigned a_s = a->_points.size();
+	unsigned b_s = b->_points.size();
+	float out = 0;
+	Vector2F possible_distance = { -INFINITY, INFINITY };
+	for (unsigned i = 0; i < a_s; i++) {
+		Vector2F side = a->_points[i] - a->_points[(i + 1) % a_s];
+		Vector2F norm;
+		if (fabsf(side.y) < EPS)
+			norm = { 0, 1 };
+		else
+			norm = { 1, -side.x / side.y };
+
+		Vector2F axis_pos_dist = AxisDistance(a, b, norm, direction);
+
+		if (isnan(axis_pos_dist.x) || isnan(axis_pos_dist.y))
+			return NAN;
+
+		possible_distance.x = fmaxf(possible_distance.x, axis_pos_dist.x);
+		possible_distance.y = fminf(possible_distance.y, axis_pos_dist.y);
+	}
+
+	for (unsigned i = 0; i < b_s; i++) {
+		Vector2F side = b->_points[i] - b->_points[(i + 1) % b_s];
+		Vector2F norm;
+		if (fabsf(side.y) < EPS)
+			norm = { 0, 1 };
+		else
+			norm = { 1, -side.x / side.y };
+
+		Vector2F axis_pos_dist = AxisDistance(a, b, norm, direction);
+		if (isnan(axis_pos_dist.x) || isnan(axis_pos_dist.y))
+			return NAN;
+		possible_distance.x = fmaxf(possible_distance.x, axis_pos_dist.x);
+		possible_distance.y = fminf(possible_distance.y, axis_pos_dist.y);
+	}
+
+	if (possible_distance.x > possible_distance.y)
+		return NAN;
+
+	if (possible_distance.x <= 0 && possible_distance.y >= 0)
+		return 0;
+
+	if (possible_distance.x <= 0 && possible_distance.y <= 0)
+		return possible_distance.y;
+
+	if (possible_distance.x >= 0 && possible_distance.y >= 0)
+		return possible_distance.x;
+
+	return NAN;
+}
+
+//! Проверяет пересечение двух коллайдеров по оси norm
+bool Collider::AxisIntersect(PolygonCollider* a, PolygonCollider* b, const Vector2F& norm)
+{
+	float min_a, min_b, max_a, max_b;
+	min_a = max_a = Vector2F::ScalarMult(a->_points[0], norm);
+	min_b = max_b = Vector2F::ScalarMult(b->_points[0], norm);
+	unsigned a_s = a->_points.size();
+	unsigned b_s = b->_points.size();
+	for (unsigned j = 1; j < a_s; j++)
+	{
+		float len_a = Vector2F::ScalarMult(a->_points[j], norm);
+		if (len_a < min_a)
+			min_a = len_a;
+		if (len_a > max_a)
+			max_a = len_a;
+	}
+
+	for (unsigned j = 1; j < b_s; j++)
+	{
+		float len_b = Vector2F::ScalarMult(b->_points[j], norm);
+		if (len_b < min_b)
+			min_b = len_b;
+		if (len_b > max_b)
+			max_b = len_b;
+	}
+
+	return (min_b <= min_a && min_a <= max_b) || (min_b <= max_a && max_a <= max_b);
+}
+
+//! Лучше не спрашивайте... И НИКОГДА НЕ ТРОГАЙТЕ
+Vector2F Collider::AxisDistance(PolygonCollider* a, PolygonCollider* b, const Vector2F& norm, const Vector2F& dir)
+{
+	float k = Vector2F::ScalarMult(dir, norm);
+	float min_a, min_b, max_a, max_b;
+	min_a = max_a = Vector2F::ScalarMult(a->_points[0], norm);
+	min_b = max_b = Vector2F::ScalarMult(b->_points[0], norm);
+	unsigned a_s = a->_points.size();
+	unsigned b_s = b->_points.size();
+	for (unsigned j = 1; j < a_s; j++)
+	{
+		float len_a = Vector2F::ScalarMult(a->_points[j], norm);
+		if (len_a < min_a)
+			min_a = len_a;
+		if (len_a > max_a)
+			max_a = len_a;
+	}
+
+	for (unsigned j = 1; j < b_s; j++)
+	{
+		float len_b = Vector2F::ScalarMult(b->_points[j], norm);
+		if (len_b < min_b)
+			min_b = len_b;
+		if (len_b > max_b)
+			max_b = len_b;
+	}
+
+	Vector2F out;
+
+	if (k == 0 && ((min_b <= min_a && min_a <= max_b) || (min_b <= max_a && max_a <= max_b)))
+		return { -INFINITY, INFINITY };
+	if (k == 0)
+		return { NAN, NAN };
+
+	out.x = (min_b - max_a) / k;
+	out.y = (max_b - min_a) / k;
+
+	return { fminf(out.x, out.y) , fmaxf(out.x, out.y) };
 }

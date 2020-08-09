@@ -110,10 +110,10 @@ void GraphicManager::SetView(DrawData& data, unsigned view_id)
 	data.size = data.size * view.real_size / view.virtual_size;
 	data.rotation *= -1;
 
-	if (data.position.x + data.size.x < 0 ||
-		data.position.y + data.size.y < 0 ||
-		data.position.x - data.size.x > view.real_position.x + view.real_size.x - 0 ||
-		data.position.y - data.size.y > view.real_position.y + view.real_size.y - 0)
+	if (data.position.x + fabsf(data.size.x) < 0 ||
+		data.position.y + fabsf(data.size.y) < 0 ||
+		data.position.x - fabsf(data.size.x) > view.real_position.x + view.real_size.x - 0 ||
+		data.position.y - fabsf(data.size.y) > view.real_position.y + view.real_size.y - 0)
 		data.spriteID = -1;
 
 }
