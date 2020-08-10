@@ -11,23 +11,22 @@
 * CharacterChoose работает с консолью
 * Gameplay работает с Gamefield и всем что с ним связано
 */
-namespace ge {
-	class Scene
-	{
-	public:
-		bool is_end; //! если true, сцена автоматически закроется по завершении кадра
-		Scene();
-		//! Инициализация вызывается либо вручную (тогда создавать сцену через OpenScene), либо автоматически (CreateScene)
-		virtual void Init() = 0;
 
-		//! Обновление вызывается автоматически каждый кадр
-		virtual void Update() = 0;
+class Scene
+{
+public:
+	bool is_end; //! если true, сцена автоматически закроется по завершении кадра
+	Scene();
+	//! Инициализация вызывается либо вручную (тогда создавать сцену через OpenScene), либо автоматически (CreateScene)
+	virtual void Init() = 0;
 
-		//! Вызывается автоматически при удалении сцены через SceneManager
-		virtual void Destroy() = 0;
+	//! Обновление вызывается автоматически каждый кадр
+	virtual void Update() = 0;
 
-		virtual ~Scene() {};
-	protected:
-		bool is_paused; //! если true, сцена не будет обновляться (пока не реализовано)
-	};
-}
+	//! Вызывается автоматически при удалении сцены через SceneManager
+	virtual void Destroy() = 0;
+
+	virtual ~Scene() {};
+protected:
+	bool is_paused; //! если true, сцена не будет обновляться (пока не реализовано)
+};

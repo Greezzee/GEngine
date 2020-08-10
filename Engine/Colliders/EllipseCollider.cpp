@@ -1,6 +1,5 @@
 #include "../Colliders/EllipseCollider.h"
 #include <cmath>
-using namespace ge;
 const float PI = 3.1415926f;
 
 const unsigned EllipseCollider::COLLIDE_ITERATIONS = 16;

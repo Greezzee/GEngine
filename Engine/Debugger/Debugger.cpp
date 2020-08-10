@@ -3,7 +3,6 @@
 #include "../Graphics/GraphicManager.h"
 #include "../Colliders/Collider.h"
 #include <math.h>
-using namespace ge;
 bool Debugger::DrawPoint(Vector2F pos, float size, unsigned view_id, Color color, unsigned layer)
 {
 	DrawData point;

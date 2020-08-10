@@ -6,7 +6,6 @@
 #include <stdio.h>
 #include "../SceneManagment/SceneManager.h"
 
-using namespace ge;
 bool GameManager::is_exit;
 
 void GameManager::Init()

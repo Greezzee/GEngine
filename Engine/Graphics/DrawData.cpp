@@ -1,6 +1,4 @@
-#pragma once
 #include "DrawData.h"
-using namespace ge;
 DrawData::DrawData() :
 	spriteID(0), position({ 0, 0 }), layer(0), rotation(0), frame(0), color(Color::White()) {}
 DrawData::DrawData(unsigned id, unsigned lr, Vector2F& pos) :

@@ -1,7 +1,5 @@
-#pragma once
 #include "InputManager.h"
 #include "../Graphics/GraphicManager.h"
-using namespace ge;
 int max(int a, int b) {
 	return a > b ? a : b;
 }

@@ -2,7 +2,6 @@
 
 #include <stdlib.h>
 #include <stdio.h>
-using namespace ge;
 using namespace tge;
 void GameField::Init()
 {
@@ -26,10 +25,10 @@ void GameField::Init()
 
 void GameField::Update()
 {
-	for (int i = 0; i < _objects->top; i++)
+	for (unsigned i = 0; i < _objects->top; i++)
 		_objects->obj[i].obj->Update();
 
-	for (int i = 0; i < _objects->top; i++)
+	for (unsigned i = 0; i < _objects->top; i++)
 		_objects->obj[i].obj->Draw();
 	
 	ClearKilledObjects();

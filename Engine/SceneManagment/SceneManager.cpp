@@ -1,5 +1,4 @@
 #include "../SceneManagment/SceneManager.h"
-using namespace ge;
 std::vector<Scene*> SceneManager::_current_scenes;
 void SceneManager::OpenScene(Scene* scene)
 {

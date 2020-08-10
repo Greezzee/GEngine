@@ -2,27 +2,25 @@
 
 #include "../Utility/Coordinate.h"
 
-namespace ge {
-	class CircleCollider
-	{
-	public:
-		CircleCollider();
-		virtual ~CircleCollider() {};
-		CircleCollider(Vector2F pos, float rad);
+class CircleCollider
+{
+public:
+	CircleCollider();
+	virtual ~CircleCollider() {};
+	CircleCollider(Vector2F pos, float rad);
 
-		void Init();
-		void Init(Vector2F pos, float rad);
+	void Init();
+	void Init(Vector2F pos, float rad);
 
-		void SetRadius(float rad);
-		void SetPos(Vector2F pos);
+	void SetRadius(float rad);
+	void SetPos(Vector2F pos);
 
-		float GetRadius() const;
-		Vector2F GetPos() const;
+	float GetRadius() const;
+	Vector2F GetPos() const;
 
-	private:
-		Vector2F _pos;
-		float _radius;
+private:
+	Vector2F _pos;
+	float _radius;
 
-		friend class Collider;
-	};
-}
+	friend class Collider;
+};

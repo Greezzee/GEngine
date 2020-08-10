@@ -1,7 +1,6 @@
 #include "GraphicManager.h"
 #include "../Time/TimeManager.h"
 
-using namespace ge;
 using namespace tge;
 Vector2F GraphicManager::ConvertRealToView(Vector2F pos, unsigned view_id)
 {

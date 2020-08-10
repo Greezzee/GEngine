@@ -1,6 +1,4 @@
-#pragma once
 #include "GameObject.h"
-using namespace ge;
 void GameObject::SetID(unsigned new_id)
 {
 	_ID = new_id;

@@ -1,7 +1,6 @@
 #include <vld.h>
 
 #include "../Engine/AllEngine.h"
-using namespace ge;
 
 class TestScene : public Scene
 {
@@ -80,11 +79,57 @@ private:
 	SquareCollider b, c;
 };
 
+class TestObj : public GameObject
+{
+public:
+	void Update() override
+	{
+
+	}
+
+	void Destroy() override
+	{
+
+	}
+
+	void Draw() override
+	{
+
+	}
+
+	GameObject* Clone() const override
+	{
+		return new TestObj;
+	}
+};
+
+class GameplayScene : public Scene
+{
+	void Init() override
+	{
+		field.Init();
+		GameobjectSpawnData new_obj;
+		new_obj.obj = new TestObj;
+		field.SpawnObject(new_obj);
+	}
+	void Update() override
+	{
+		field.Update();
+	}
+
+	void Destroy() override
+	{
+		field.Destroy();
+	}
+
+	GameField field;
+};
+
 int main()
 {
-	ge::GameManager::Init();
-	ge::Scene* start = new TestScene;
+	GameManager::Init();
+	Scene* start = new GameplayScene;
 	start->Init();
-	ge::GameManager::Launch(start);
+	GameManager::Launch(start);
 	return 0;
 }

@@ -1,6 +1,5 @@
 #include "CircleCollider.h"
 
-using namespace ge;
 CircleCollider::CircleCollider()
 {
 	_pos = { 0, 0 };

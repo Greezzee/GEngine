@@ -23,25 +23,25 @@
 * 
 * НЕ ТРОГАТЬ
 */
-namespace ge {
-	class SceneManager
-	{
-	public:
-		//! Добавляет новую сцену в активный список. scene уже инициализирован, память под неё выделена
-		static void OpenScene(Scene* scene);
 
-		//! Добавляет новую сцену в активный список. scene еще НЕ инициализирован, память под неё выделена
-		static void CreateScene(Scene* scene);
+class SceneManager
+{
+public:
+	//! Добавляет новую сцену в активный список. scene уже инициализирован, память под неё выделена
+	static void OpenScene(Scene* scene);
 
-		//! Удаляет сцену, вызывая её Destroy и очищая память
-		static void CloseScene(const Scene* scene);
+	//! Добавляет новую сцену в активный список. scene еще НЕ инициализирован, память под неё выделена
+	static void CreateScene(Scene* scene);
 
-		//! Вызывается каждый кадр автоматически, обновляет сцены. Вызов вручную опасен!
-		static bool UpdateScenes();
+	//! Удаляет сцену, вызывая её Destroy и очищая память
+	static void CloseScene(const Scene* scene);
 
-		//! Вызывается при закрытии игры, закрывает все сцены, очищает память
-		static void Destroy();
-	private:
-		static std::vector<Scene*> _current_scenes; //! Все текущие сцены
-	};
-}
+	//! Вызывается каждый кадр автоматически, обновляет сцены. Вызов вручную опасен!
+	static bool UpdateScenes();
+
+	//! Вызывается при закрытии игры, закрывает все сцены, очищает память
+	static void Destroy();
+private:
+	static std::vector<Scene*> _current_scenes; //! Все текущие сцены
+};
+

@@ -5,7 +5,6 @@
 #include "../Utility/Coordinate.h"
 #include "../Utility/Line.h"
 #include "math.h"
-using namespace ge;
 float sqr(float x) {
 	return x * x;
 }

@@ -1,6 +1,5 @@
 #include "Line.h"
 #include <cmath>
-using namespace ge;
 Line::Line()
 {
 	a = b = c = 0;
@@ -16,7 +15,7 @@ Line::Line(const Vector2F& p, const Vector2F& q)
 
 void Line::Normalize()
 {
-	double z = sqrt(a * a + b * b);
+	float z = sqrtf(a * a + b * b);
 	if (abs(z) > EPS)
 		a /= z, b /= z, c /= z;
 }
@@ -31,7 +30,7 @@ float Determinant(float a, float b, float c, float d)
 	return a * d - b * c;
 }
 
-inline bool ge::Between(float l, float r, float x)
+inline bool Between(float l, float r, float x)
 {
 	return fmin(l, r) <= x + EPS && x <= fmax(l, r) + EPS;
 }
@@ -61,7 +60,7 @@ bool Intersect(Vector2F a, Vector2F b, Vector2F c, Vector2F d) {
 		return false;
 	Line m(a, b);
 	Line n(c, d);
-	double zn = Determinant(m.a, m.b, n.a, n.b);
+	float zn = Determinant(m.a, m.b, n.a, n.b);
 	Vector2F left, right;
 	if (abs(zn) < EPS) {
 		if (abs(m.Distance(c)) > EPS || abs(n.Distance(a)) > EPS)
@@ -75,9 +74,9 @@ bool Intersect(Vector2F a, Vector2F b, Vector2F c, Vector2F d) {
 	else {
 		left.x = right.x = -Determinant(m.c, m.b, n.c, n.b) / zn;
 		left.y = right.y = -Determinant(m.a, m.c, n.a, n.c) / zn;
-		return ge::Between(a.x, b.x, left.x)
-			&& ge::Between(a.y, b.y, left.y)
-			&& ge::Between(c.x, d.x, left.x)
-			&& ge::Between(c.y, d.y, left.y);
+		return Between(a.x, b.x, left.x)
+			&& Between(a.y, b.y, left.y)
+			&& Between(c.x, d.x, left.x)
+			&& Between(c.y, d.y, left.y);
 	}
 }

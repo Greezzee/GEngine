@@ -1,7 +1,5 @@
-#pragma once
 #include "Coordinate.h"
 #include <cmath>
-using namespace ge;
 float Vector2F::ScalarMult(const Vector2F& a, const Vector2F& b)
 {
 	return a.x * b.x + a.y * b.y;
@@ -148,7 +146,7 @@ double Vector2D::SqrMagnitude() const
 
 double Vector2D::Magnitude() const
 {
-	return sqrtf(SqrMagnitude());
+	return sqrt(SqrMagnitude());
 }
 
 const Vector2D operator/(Vector2D& a, double b)
@@ -426,5 +424,5 @@ const bool operator!=(const Vector2U& a, const Vector2U& b)
 }
 
 Vector2F Vector2I::to2F() const {
-	return Vector2F(this->x, this->y);
+	return Vector2F((float)this->x, (float)this->y);
 }

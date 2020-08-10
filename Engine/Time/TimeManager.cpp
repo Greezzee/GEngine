@@ -1,6 +1,4 @@
-#pragma once
 #include "TimeManager.h"
-using namespace ge;
 unsigned long long TimeManager::TimeFromLastRestart;
 unsigned long long TimeManager::DeltaTime;
 sf::Clock TimeManager::clock;

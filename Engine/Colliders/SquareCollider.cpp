@@ -1,7 +1,6 @@
 #include "SquareCollider.h"
 
 #include <cmath>
-using namespace ge;
 
 //! Задаёт нулевой коллайдер, никому не принадлежащий
 void SquareCollider::Init()
