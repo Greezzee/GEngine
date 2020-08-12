@@ -115,6 +115,7 @@
     <ClCompile Include="engine\gameplay\GameField.cpp" />
     <ClCompile Include="engine\gameplay\GameObject.cpp" />
     <ClCompile Include="engine\graphics\DrawData.cpp" />
+    <ClCompile Include="Engine\Graphics\FPSCounter.cpp" />
     <ClCompile Include="engine\graphics\GraphicManager.cpp" />
     <ClCompile Include="engine\scenemanagment\Scene.cpp" />
     <ClCompile Include="engine\scenemanagment\SceneManager.cpp" />
@@ -137,6 +138,7 @@
     <ClInclude Include="engine\gameplay\GameObject.h" />
     <ClInclude Include="engine\gameplay\ObjectsArray.h" />
     <ClInclude Include="engine\graphics\DrawData.h" />
+    <ClInclude Include="Engine\Graphics\FPSCounter.h" />
     <ClInclude Include="engine\graphics\GraphicManager.h" />
     <ClInclude Include="engine\scenemanagment\Scene.h" />
     <ClInclude Include="engine\scenemanagment\SceneManager.h" />

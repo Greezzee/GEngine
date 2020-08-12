@@ -366,7 +366,7 @@ const Vector2U& operator+(const Vector2U& that)
 }
 const Vector2U operator-(const Vector2U& that)
 {
-	return Vector2U(-that.x, -that.y);
+	return Vector2U(that.x, that.y);
 }
 
 const Vector2U& Vector2U::operator+=(const Vector2U& that)

@@ -24,8 +24,6 @@ void GameManager::Launch(Scene* start_scene)
 	SceneManager::OpenScene(start_scene);
 	//------------------------------
 
-	int frames = 0;
-	unsigned sec = 0;
 	while (!is_exit) {
 		// UPDATE
 		//------------------------------
@@ -35,13 +33,6 @@ void GameManager::Launch(Scene* start_scene)
 
 		is_exit = is_exit || SceneManager::UpdateScenes();
 		is_exit = is_exit || GraphicManager::Update();
-		sec += (unsigned)TimeManager::GetDeltaTime();
-		frames++;
-		if (sec >= 1000000) {
-			sec = 0;
-			//printf("%d\n", frames);
-			frames = 0;
-		}
 	}
 
 	// DESTROY

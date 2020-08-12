@@ -5,6 +5,7 @@
 #include "DrawData.h"
 #include "../Utility/Coordinate.h"
 #include "../Debugger/Debugger.h"
+#include "FPSCounter.h"
 
 namespace tge {
 	//! Структура для хранения информации об изображениях и анимации, используемый ТОЛЬКО в GraphicManager
@@ -119,7 +120,19 @@ public:
 	//! Переводит позицию чего-либо в системе экрана монитора в систему данного view
 	static Vector2F ConvertRealToView(Vector2F pos, unsigned view_id);
 
+	//! Вернёт указатель на сфмл-окно (Не советую использовать вообще никогда)
 	static sf::RenderWindow* GetWindow();
+
+	//! Устанавливает новое разрешение экрана в пикселях
+	//! Меняет view по умолчанию так, чтобы она соответствовала новому разрешению
+	//! НЕ МЕНЯЕТ view, добавленные до этого, от чего они могут перестать работать корректно
+	//! Советуется делать ResetViews() и загружать новые согласно новому разрешению
+	static void SetResolution(Vector2U new_size);
+
+	//! Вернёт разрешение экрана в пикселях
+	static Vector2U GetResolution();
+
+	static void ShowFPS(bool is_show);
 
 private:
 	static sf::RenderWindow window; //! Окно SFML, на котором происходит вся отрисовка
@@ -137,6 +150,8 @@ private:
 	static std::vector<int> _basic_shapes;
 
 	static unsigned _engine_sprites_count;
+
+	static tge::FPSCounter _fps_counter;
 
 	friend class Debugger;
 };

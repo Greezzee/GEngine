@@ -29,7 +29,7 @@ void InputManager::Init()
 	_keys[KeyboardKey::D] = sf::Keyboard::Key::D;
 	_keys[KeyboardKey::DOT] = sf::Keyboard::Key::Period;
 	_keys[KeyboardKey::E] = sf::Keyboard::Key::E;
-	_keys[KeyboardKey::ENTER] = sf::Keyboard::Key::Enter;
+	_keys[KeyboardKey::ENTER] = sf::Keyboard::Key::Return;
 	_keys[KeyboardKey::EQUAL] = sf::Keyboard::Key::Equal;
 	_keys[KeyboardKey::ESC] = sf::Keyboard::Key::Escape;
 	_keys[KeyboardKey::F] = sf::Keyboard::Key::F;
@@ -55,7 +55,7 @@ void InputManager::Init()
 	_keys[KeyboardKey::LCTRL] = sf::Keyboard::Key::LControl;
 	_keys[KeyboardKey::LSHIFT] = sf::Keyboard::Key::LShift;
 	_keys[KeyboardKey::M] = sf::Keyboard::Key::M;
-	_keys[KeyboardKey::MINUS] = sf::Keyboard::Key::Hyphen;
+	_keys[KeyboardKey::MINUS] = sf::Keyboard::Key::Dash;
 	_keys[KeyboardKey::N] = sf::Keyboard::Key::N;
 	_keys[KeyboardKey::N0] = sf::Keyboard::Key::Num0;
 	_keys[KeyboardKey::N1] = sf::Keyboard::Key::Num1;
@@ -84,7 +84,7 @@ void InputManager::Init()
 	_keys[KeyboardKey::RALT] = sf::Keyboard::Key::RAlt;
 	_keys[KeyboardKey::RCTRL] = sf::Keyboard::Key::RControl;
 	_keys[KeyboardKey::RSHIFT] = sf::Keyboard::Key::RShift;
-	_keys[KeyboardKey::BSLACH] = sf::Keyboard::Key::Backslash;
+	_keys[KeyboardKey::BSLACH] = sf::Keyboard::Key::BackSlash;
 	_keys[KeyboardKey::S] = sf::Keyboard::Key::S;
 	_keys[KeyboardKey::SEMICOLON] = sf::Keyboard::Key::SemiColon;
 	_keys[KeyboardKey::SLASH] = sf::Keyboard::Key::Slash;
@@ -126,8 +126,6 @@ void InputManager::Update()
 	}
 
 	_mouse_info.pos = { (float)sf::Mouse::getPosition(*GraphicManager::GetWindow()).x, (float)sf::Mouse::getPosition(*GraphicManager::GetWindow()).y };
-	_mouse_info.pos += Vector2F((float)GraphicManager::GetWindow()->getSize().x, (float)GraphicManager::GetWindow()->getSize().y) / 2;
-
 
 	if (_mouse_info.l_button.is_pressed)
 		_mouse_info.l_button.is_pressed = false;

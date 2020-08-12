@@ -135,6 +135,9 @@
     <ClCompile Include="Engine\Debugger\Debugger.cpp">
       <Filter>Source Files\Engine\Debugger</Filter>
     </ClCompile>
+    <ClCompile Include="Engine\Graphics\FPSCounter.cpp">
+      <Filter>Source Files\Engine\Graphics</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="engine\colliders\CircleCollider.h">
@@ -193,6 +196,9 @@
     </ClInclude>
     <ClInclude Include="Engine\AllEngine.h">
       <Filter>Header Files\Engine</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Graphics\FPSCounter.h">
+      <Filter>Header Files\Engine\Graphics</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

@@ -1,14 +1,18 @@
 #include "GraphicManager.h"
 #include "../Time/TimeManager.h"
-
+#include <cmath>
 using namespace tge;
 Vector2F GraphicManager::ConvertRealToView(Vector2F pos, unsigned view_id)
 {
 	View& view = views[view_id];
-	pos -= view.real_position;
-	pos += view.real_size * (view.unit_vector - Vector2F(1, 1));
-	pos = pos / view.real_size * view.virtual_size / view.unit_vector;
-	pos = pos + view.virtual_position - view.virtual_size / 2.f;
+	pos -= view.real_position - view.real_size * view.real_origin;
+	pos -= view.real_size * (Vector2F(1, 1) - view.unit_vector) / 2;
+	pos = pos * view.unit_vector;
+	pos = pos / view.real_size * view.virtual_size;
+
+	pos += view.virtual_position;
+	pos -= view.virtual_size * view.virtual_origin;
+
 	return pos;
 }
 
@@ -19,6 +23,7 @@ std::vector<std::list<sf::Sprite>> GraphicManager::to_draw;
 unsigned GraphicManager::_sprites_count;
 std::vector<int> GraphicManager::_basic_shapes;
 unsigned GraphicManager::_engine_sprites_count;
+tge::FPSCounter GraphicManager::_fps_counter;
 
 std::vector<View> GraphicManager::views;
 const unsigned GraphicManager::LAYER_COUNT = 20;
@@ -66,6 +71,9 @@ bool GraphicManager::Update()
 	}
 	
 	window.display();
+
+	_fps_counter.Update();
+
 	return false;
 }
 
@@ -105,16 +113,19 @@ void GraphicManager::SetView(DrawData& data, unsigned view_id)
 	Vector2F obj_pos = data.position - view.virtual_position + view.virtual_size * view.virtual_origin;
 	data.position = (obj_pos * view.real_size / view.virtual_size) * view.unit_vector;
 	data.position -= view.real_size * (view.unit_vector - Vector2F(1, 1)) / 2.f;
-	data.position += view.real_position + view.real_size * view.real_origin;
+	data.position += view.real_position - view.real_size * view.real_origin;
 	data.size = data.size * view.real_size / view.virtual_size;
 	data.rotation *= -1;
+	
+	auto view_pos = view.real_position - view.real_size * view.real_origin;
 
-	if (data.position.x + fabsf(data.size.x) < 0 ||
-		data.position.y + fabsf(data.size.y) < 0 ||
-		data.position.x - fabsf(data.size.x) > view.real_position.x + view.real_size.x - 0 ||
-		data.position.y - fabsf(data.size.y) > view.real_position.y + view.real_size.y - 0)
+	float delta = fabsf(data.size.x) + fabsf(data.size.y);
+	if (data.position.x + delta < view_pos.x ||
+		data.position.y + delta < view_pos.y ||
+		data.position.x - delta > view_pos.x + view.real_size.x ||
+		data.position.y - delta > view_pos.y + view.real_size.y)
 		data.spriteID = -1;
-
+	
 }
 
 View* GraphicManager::GetView(unsigned view_id)
@@ -194,4 +205,22 @@ int GraphicManager::AddView(View view)
 void GraphicManager::ResetViews()
 {
 	views.resize(1);
+}
+
+void GraphicManager::SetResolution(Vector2U new_size)
+{
+	window.create(sf::VideoMode(new_size.x, new_size.y), "Test", sf::Style::Titlebar | sf::Style::Close);
+	views[0].real_size = Vector2F((float)new_size.x, (float)new_size.y);
+	views[0].virtual_size = views[0].real_size;
+}
+
+Vector2U GraphicManager::GetResolution()
+{
+	auto size = window.getSize();
+	return { size.x, size.y };
+}
+
+void GraphicManager::ShowFPS(bool is_active)
+{
+	_fps_counter.is_active = is_active;
 }

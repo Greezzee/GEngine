@@ -70,9 +70,7 @@ protected:
 	Vector2F _basic_direction; //! WIP, всегда устанавливать значение по умолчанию! (1, 0)
 	float _angle = 0; //! ”гол поворота объекта в радианах против часовой стрелки
 
-	GameField* gamefield; //! ”казатель на игровое поле, в котором живЄт данный игровой объект
-
-	std::string name = "unnamed block";
+	GameField* gamefield = nullptr; //! ”казатель на игровое поле, в котором живЄт данный игровой объект
 
 	friend class Collider;
 };

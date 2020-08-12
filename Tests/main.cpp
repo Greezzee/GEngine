@@ -1,4 +1,4 @@
-#include <vld.h>
+//#include <vld.h>
 
 #include "../Engine/AllEngine.h"
 
@@ -19,6 +19,9 @@ public:
 		InputManager::LinkToCode(KeyboardKey::E, 5);
 		InputManager::LinkToCode(KeyboardKey::ESC, 6);
 
+		InputManager::LinkToCode(KeyboardKey::MINUS, 7);
+		InputManager::LinkToCode(KeyboardKey::EQUAL, 8);
+
 		View v;
 		v.real_origin = { 0, 0 };
 		v.real_position = { 0, 0 };
@@ -27,11 +30,17 @@ public:
 		v.virtual_origin = { 0.5, 0.5 };
 		v.virtual_size = { 1280, 720 };
 		v.virtual_position = { 0, 0 };
-		GraphicManager::AddView(v);
+		//GraphicManager::AddView(v);
 	}
 	void Update() override 
 	{
-		
+		if (InputManager::IsPressed(7)) {
+			GraphicManager::ShowFPS(true);
+		}
+		if (InputManager::IsPressed(8)) {
+			GraphicManager::ShowFPS(false);
+		}
+
 		Vector2F speed = { 0, 0 };
 		float rot = 0;
 		if (InputManager::IsDown(2))
@@ -49,6 +58,10 @@ public:
 
 		speed = speed.Normalized();
 
+		auto mouse = GraphicManager::ConvertRealToView(InputManager::GetMousePos(), 0);
+		//auto mouse = InputManager::GetMousePos();
+		//printf("Pos: %g : %g\n", mouse.x, mouse.y);
+
 		a.SetPos(a.GetPos() + speed * 200 * TimeManager::GetDeltaTimeF());
 		a.SetAngle(a.GetAngle() + rot * TimeManager::GetDeltaTimeF());
 		Debugger::DrawCollider(a, 10, 4);
@@ -58,14 +71,14 @@ public:
 
 
 		float dist = Collider::DistanceBetween(&a, &PolygonCollider(b), { 1, 0 });
-		printf("%g\n", dist);
+		//printf("%g\n", dist);
 		if (fabsf(dist) < 10) {
 			Debugger::DrawLine(a.GetPos(), b.GetPos(), 4, 0, Color::Red());
 		}
-		for (int i = 0; i < 2000; i += 100)
-			Debugger::DrawLine({ (float)i, 0 }, { (float)i, 1000 }, 1);
-		for (int i = 0; i < 2000; i += 100)
-			Debugger::DrawLine({ 0, (float)i }, {2000, (float)i }, 1);
+		for (int i = 0; i < 1280; i += 100)
+			Debugger::DrawLine({ (float)i, 0 }, { (float)i, 720 }, 2);
+		for (int i = 0; i < 720; i += 100)
+			Debugger::DrawLine({ 0, (float)i }, {1280, (float)i }, 2);
 		
 		if (InputManager::IsPressed(6))
 			SceneManager::CloseScene(this);
@@ -128,7 +141,7 @@ class GameplayScene : public Scene
 int main()
 {
 	GameManager::Init();
-	Scene* start = new GameplayScene;
+	Scene* start = new TestScene;
 	start->Init();
 	GameManager::Launch(start);
 	return 0;

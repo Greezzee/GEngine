@@ -2,7 +2,7 @@
 
 #include "../Graphics/GraphicManager.h"
 #include "../Colliders/Collider.h"
-#include <math.h>
+#include <cmath>
 bool Debugger::DrawPoint(Vector2F pos, float size, unsigned view_id, Color color, unsigned layer)
 {
 	DrawData point;
@@ -35,10 +35,8 @@ bool Debugger::DrawLine(Vector2F start, Vector2F end, float thick, unsigned view
 bool Debugger::DrawCollider(const SquareCollider& col, float points_size, float line_thick, unsigned view_id, Color color, unsigned layer)
 {
 	for (int i = 0; i < 4; i++) {
-		if (!DrawPoint(col.GetPoint(i), points_size, view_id, color, layer))
-			return false;
-		if (!DrawLine(col.GetPoint(i), col.GetPoint((i + 1) % 4), line_thick, view_id, color, layer))
-			return false;
+		DrawPoint(col.GetPoint(i), points_size, view_id, color, layer);
+		DrawLine(col.GetPoint(i), col.GetPoint((i + 1) % 4), line_thick, view_id, color, layer);
 	}
 	return true;
 }
@@ -46,11 +44,9 @@ bool Debugger::DrawCollider(const SquareCollider& col, float points_size, float 
 bool Debugger::DrawCollider(const PolygonCollider& col, float points_size, float line_thick, unsigned view_id, Color color, unsigned layer)
 {
 	unsigned col_s = col.GetPointsCount();
-	for (int i = 0; i < col_s; i++) {
-		if (!DrawPoint(col.GetPoint(i), points_size, view_id, color, layer))
-			return false;
-		if (!DrawLine(col.GetPoint(i), col.GetPoint((i + 1) % col_s), line_thick, view_id, color, layer))
-			return false;
+	for (unsigned i = 0; i < col_s; i++) {
+		DrawPoint(col.GetPoint(i), points_size, view_id, color, layer);
+		DrawLine(col.GetPoint(i), col.GetPoint((i + 1) % col_s), line_thick, view_id, color, layer);
 	}
 	return true;
 }

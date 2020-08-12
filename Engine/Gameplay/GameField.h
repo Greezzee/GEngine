@@ -67,6 +67,6 @@ private:
 	* среди них будут существовать удалённые
 	*/
 	void ClearKilledObjects();
-	tge::ObjectsArray* _objects;//! список всех объектов. Подробнее в одноименном файле
+	tge::ObjectsArray* _objects = nullptr;//! список всех объектов. Подробнее в одноименном файле
 };
 

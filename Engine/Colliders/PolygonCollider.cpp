@@ -1,5 +1,5 @@
 #include "PolygonCollider.h"
-
+#include <cmath>
 PolygonCollider::PolygonCollider()
 {
 	Init();
@@ -21,7 +21,7 @@ void PolygonCollider::Init(const SquareCollider& that)
 	_pos = that.GetPos();
 	_angle = that.GetAngle();
 	_points.resize(4);
-	for (int i = 0; i < 4; i++)
+	for (unsigned i = 0; i < 4; i++)
 		_points[i] = that.GetPoint(i);
 }
 
@@ -30,7 +30,7 @@ void PolygonCollider::Init(const Vector2F& pos, std::vector<Vector2F>& points)
 	_pos = pos;
 	_angle = 0;
 	_points = points;
-	for (int i = 0; i < _points.size(); i++)
+	for (unsigned i = 0; i < _points.size(); i++)
 		_points[i] += _pos;
 }
 
@@ -40,10 +40,10 @@ void PolygonCollider::Init(const Vector2F& pos, std::vector<Vector2F>& points, f
 	_pos = pos;
 	_angle = angle;
 	_points = points;
-	for (int i = 0; i < _points.size(); i++)
+	for (unsigned i = 0; i < _points.size(); i++)
 		_points[i] += _pos;
 
-	for (int i = 0; i < _points.size(); i++) {
+	for (unsigned i = 0; i < _points.size(); i++) {
 		auto p = _points[i];
 		p = { p.x * cosf(_angle) + p.y * sinf(_angle), -p.x * sinf(_angle) + p.y * cosf(_angle) };
 	}
@@ -58,7 +58,7 @@ void PolygonCollider::SetAngle(float angle)
 	float a = angle - _angle;
 	if (fabsf(a) < EPS)
 		return;
-	for (int i = 0; i < _points.size(); i++) {
+	for (unsigned i = 0; i < _points.size(); i++) {
 		auto p = _points[i] - _pos;
 		p = { p.x * cosf(a) - p.y * sinf(a), p.x * sinf(a) + p.y * cosf(a) };
 		_points[i] = p + _pos;
@@ -74,7 +74,7 @@ Vector2F PolygonCollider::GetPos() const
 void PolygonCollider::SetPos(Vector2F pos)
 {
 	auto p = pos - _pos;
-	for (int i = 0; i < _points.size(); i++)
+	for (unsigned i = 0; i < _points.size(); i++)
 		_points[i] += p;
 	_pos = pos;
 }
