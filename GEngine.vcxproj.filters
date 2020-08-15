@@ -79,6 +79,21 @@
     <Filter Include="Source Files\Tests">
       <UniqueIdentifier>{147521b3-f045-4ca6-a544-93e5a96039f6}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Shaders">
+      <UniqueIdentifier>{0c55a63b-ea7d-4088-a19f-b755285f89af}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Engine\Graphics\ShaderManagment">
+      <UniqueIdentifier>{d1b6277b-f56e-43a9-9d36-f6f61c342898}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Engine\Graphics\ShaderManagment">
+      <UniqueIdentifier>{508b7378-5978-4740-82e0-86f94ddce7a4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Engine\Graphics\ShaderManagment\LightManager">
+      <UniqueIdentifier>{42cb0787-3308-4f47-9835-fc77472b0fae}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Engine\Graphics\ShaderManagment\LightManager">
+      <UniqueIdentifier>{068ad7f3-d205-4a47-a649-61ebe170c30b}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="engine\colliders\CircleCollider.cpp">
@@ -137,6 +152,21 @@
     </ClCompile>
     <ClCompile Include="Engine\Graphics\FPSCounter.cpp">
       <Filter>Source Files\Engine\Graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Graphics\ShaderManagment\ShaderManager.cpp">
+      <Filter>Source Files\Engine\Graphics\ShaderManagment</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Graphics\ShaderManagment\BlurShader.cpp">
+      <Filter>Source Files\Engine\Graphics\ShaderManagment</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Graphics\ShaderManagment\LightManager\LightManager.cpp">
+      <Filter>Source Files\Engine\Graphics\ShaderManagment\LightManager</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Graphics\ShaderManagment\SmoothLightShader.cpp">
+      <Filter>Source Files\Engine\Graphics\ShaderManagment</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Graphics\ShaderManagment\PixelLightShader.cpp">
+      <Filter>Source Files\Engine\Graphics\ShaderManagment</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -200,5 +230,37 @@
     <ClInclude Include="Engine\Graphics\FPSCounter.h">
       <Filter>Header Files\Engine\Graphics</Filter>
     </ClInclude>
+    <ClInclude Include="Engine\Graphics\ShaderManagment\ShaderManager.h">
+      <Filter>Header Files\Engine\Graphics\ShaderManagment</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Graphics\ShaderManagment\Shader.h">
+      <Filter>Header Files\Engine\Graphics\ShaderManagment</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Graphics\ShaderManagment\BlurShader.h">
+      <Filter>Header Files\Engine\Graphics\ShaderManagment</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Graphics\ShaderManagment\LightManager\LightManager.h">
+      <Filter>Header Files\Engine\Graphics\ShaderManagment\LightManager</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Graphics\ShaderManagment\SmoothLightShader.h">
+      <Filter>Header Files\Engine\Graphics\ShaderManagment</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Graphics\ShaderManagment\PixelLightShader.h">
+      <Filter>Header Files\Engine\Graphics\ShaderManagment</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Engine\Graphics\Shaders\SmoothLight.frag">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="Engine\Graphics\Shaders\Test.frag">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="Engine\Graphics\Shaders\Blur.frag">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="Engine\Graphics\Shaders\PixelLight.frag">
+      <Filter>Shaders</Filter>
+    </None>
   </ItemGroup>
 </Project>

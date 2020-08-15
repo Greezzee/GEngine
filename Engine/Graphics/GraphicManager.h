@@ -2,6 +2,8 @@
 #include <SFML/Graphics.hpp>
 #include <vector>
 #include <list>
+#include "ShaderManagment/ShaderManager.h"
+#include "ShaderManagment/Shader.h"
 #include "DrawData.h"
 #include "../Utility/Coordinate.h"
 #include "../Debugger/Debugger.h"
@@ -120,6 +122,15 @@ public:
 	//! Переводит позицию чего-либо в системе экрана монитора в систему данного view
 	static Vector2F ConvertRealToView(Vector2F pos, unsigned view_id);
 
+	//! Переводит позицию чего-либо в системе экрана монитора в систему данного view
+	static Vector2F ConvertRealPosToView(Vector2F pos, unsigned view_id);
+
+	//! Переводит позицию чего-либо в системе данной view в систему экрана монитора
+	static Vector2F ConvertViewPosToReal(Vector2F pos, unsigned view_id);
+
+	//! Переводит размер чего-либо из системы данной view в систему экрана монитора. Применять только если отношения сторон real_size и virtual_size совпадают!!!
+	static float ConvertViewSizeToReal(float len, unsigned view_id);
+
 	//! Вернёт указатель на сфмл-окно (Не советую использовать вообще никогда)
 	static sf::RenderWindow* GetWindow();
 
@@ -139,7 +150,7 @@ private:
 
 	static std::vector<tge::GraphicPrefab> sprites; //! Массив всех спрайтов игры
 
-	static std::vector<std::list<sf::Sprite>> to_draw; //! Массив всех спрайтов, которые нужно нарисовать в данный кадр
+	static std::vector<std::list<tge::Sprite>> to_draw; //! Массив всех спрайтов, которые нужно нарисовать в данный кадр
 
 	static std::vector<View> views; //! Массив всех Views.
 

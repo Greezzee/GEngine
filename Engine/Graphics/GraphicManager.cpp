@@ -1,5 +1,6 @@
 #include "GraphicManager.h"
 #include "../Time/TimeManager.h"
+#include "../AllEngine.h"
 #include <cmath>
 using namespace tge;
 Vector2F GraphicManager::ConvertRealToView(Vector2F pos, unsigned view_id)
@@ -16,10 +17,43 @@ Vector2F GraphicManager::ConvertRealToView(Vector2F pos, unsigned view_id)
 	return pos;
 }
 
+Vector2F GraphicManager::ConvertRealPosToView(Vector2F pos, unsigned view_id)
+{
+	View& view = views[view_id];
+	pos -= view.real_position - view.real_size * view.real_origin;
+	pos -= view.real_size * (Vector2F(1, 1) - view.unit_vector) / 2;
+	pos = pos * view.unit_vector;
+	pos = pos / view.real_size * view.virtual_size;
+
+	pos += view.virtual_position;
+	pos -= view.virtual_size * view.virtual_origin;
+
+	return pos;
+}
+
+Vector2F GraphicManager::ConvertViewPosToReal(Vector2F pos, unsigned view_id)
+{
+	View& view = views[view_id];
+	pos += view.virtual_size * view.virtual_origin;
+	pos -= view.virtual_position;
+	pos = pos * view.real_size / view.virtual_size;
+	pos = pos / view.unit_vector;
+	pos += view.real_size * (Vector2F(1, 1) - view.unit_vector) / 2;
+	pos += view.real_position - view.real_size * view.real_origin;
+
+	return pos;
+}
+
+float GraphicManager::ConvertViewSizeToReal(float len, unsigned view_id)
+{
+	View& view = views[view_id];
+	len = len * view.real_size.x / view.virtual_size.x;
+	return len;
+}
 
 sf::RenderWindow GraphicManager::window;
 std::vector<GraphicPrefab> GraphicManager::sprites;
-std::vector<std::list<sf::Sprite>> GraphicManager::to_draw;
+std::vector<std::list<tge::Sprite>> GraphicManager::to_draw;
 unsigned GraphicManager::_sprites_count;
 std::vector<int> GraphicManager::_basic_shapes;
 unsigned GraphicManager::_engine_sprites_count;
@@ -36,7 +70,7 @@ void GraphicManager::Init()
 	_sprites_count = 0;
 	sprites.resize(_engine_sprites_count);
 	to_draw.resize(LAYER_COUNT);
-
+	Sprite a;
 	_engine_sprites_count = 2;
 	_basic_shapes.resize(2);
 
@@ -49,7 +83,7 @@ void GraphicManager::Init()
 	//views[Views::PLAYER_CAM] = { {0, 0}, {1280, 720}, {0, 0}, {0, 0}, {1600, 900}, {0.5, 0.5}, {1, -1}};
 	//views[Views::MAIN_MENU] = { {0, 0}, {1280, 720}, {0, 0}, {0, 0}, {1600, 900}, {0, 0}, {1, -1}};
 
-
+	tge::ShaderManager::Init();
 }
 
 bool GraphicManager::Update()
@@ -62,10 +96,9 @@ bool GraphicManager::Update()
 	}
 
 	window.clear();
-	
 	for (int i = 0; i < LAYER_COUNT; i++) {
 		for (auto obj = to_draw[i].begin(); obj != to_draw[i].end(); obj++) {
-			window.draw(*obj);
+			obj->shader ? window.draw((*obj).sprite, ShaderManager::GetShader((*obj).shader)) : window.draw((*obj).sprite);
 		}
 		to_draw[i].clear();
 	}
@@ -84,6 +117,7 @@ void GraphicManager::Exit()
 	sprites.resize(0);
 	views.resize(0);
 	window.close();
+	tge::ShaderManager::Destroy();
 }
 
 bool GraphicManager::Draw(DrawData& data, unsigned view_id)
@@ -103,7 +137,7 @@ bool GraphicManager::Draw(DrawData& data, unsigned view_id)
 	spr.sprite.setOrigin(sf::Vector2f(data.origin.x * spr.size.x, data.origin.y * spr.size.y));
 	spr.sprite.setScale(sf::Vector2f(data.size.x / spr.size.x, data.size.y / spr.size.y));
 	spr.sprite.setTextureRect(sf::IntRect(spr.size.x * (data.frame % spr.frames_count), 0, (int)spr.size.x, (int)spr.size.y));
-	to_draw[data.layer].push_back(sprites[data.spriteID].sprite);
+	to_draw[data.layer].push_back({ sprites[data.spriteID].sprite, data.shader });
 	return true;
 }
 
@@ -222,5 +256,5 @@ Vector2U GraphicManager::GetResolution()
 
 void GraphicManager::ShowFPS(bool is_active)
 {
-	_fps_counter.is_active = is_active;
+	_fps_counter.SetActive(is_active);
 }

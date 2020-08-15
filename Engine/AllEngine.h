@@ -11,3 +11,8 @@
 #include "Time/TimeManager.h"
 #include "Utility/Coordinate.h"
 #include "Utility/Line.h"
+#include "Graphics/ShaderManagment/ShaderManager.h"
+#include "Graphics/ShaderManagment/BlurShader.h"
+#include "Graphics/ShaderManagment/PixelLightShader.h"
+#include "Graphics/ShaderManagment/SmoothLightShader.h"
+#include "Graphics/ShaderManagment/LightManager/LightManager.h"

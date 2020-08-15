@@ -1,7 +1,6 @@
-//#include <vld.h>
+#include <vld.h>
 
 #include "../Engine/AllEngine.h"
-
 class TestScene : public Scene
 {
 public:
@@ -31,14 +30,21 @@ public:
 		v.virtual_size = { 1280, 720 };
 		v.virtual_position = { 0, 0 };
 		//GraphicManager::AddView(v);
+		text = GraphicManager::LoadSprite(GraphicPrefabData("Tests/player.png", Vector2F(96, 96), 1));
+		GraphicManager::AddView({ {680, 360}, {680, 360}, {0.5, 0.5}, {0, 0}, {1280, 720}, {0, 0}, {-1, 1} });
+
+		LightManager::SetView(1);
+
+		LightManager::SetPixelSize(40);
+		LightManager::SetGlobalLight(Color(50, 50, 50, 0));
 	}
 	void Update() override 
 	{
 		if (InputManager::IsPressed(7)) {
-			GraphicManager::ShowFPS(true);
+			GraphicManager::SetResolution(GraphicManager::GetResolution() + Vector2U(16 * 5, 9 * 5));
 		}
 		if (InputManager::IsPressed(8)) {
-			GraphicManager::ShowFPS(false);
+			GraphicManager::SetResolution(GraphicManager::GetResolution() - Vector2U(16 * 5, 9 * 5));
 		}
 
 		Vector2F speed = { 0, 0 };
@@ -58,14 +64,23 @@ public:
 
 		speed = speed.Normalized();
 
-		auto mouse = GraphicManager::ConvertRealToView(InputManager::GetMousePos(), 0);
+		auto mouse = GraphicManager::ConvertRealToView(InputManager::GetMousePos(), 1);
+
+		LightManager::ClearLightSource();
+		LightData d;
+		d.pos = {100, 100};
+		d.color = Color::White();
+		d.full_dist = 50;
+		d.any_dist = 150;
+		d.softness = 1;
+		LightManager::AddLightSource(d);
 		//auto mouse = InputManager::GetMousePos();
 		//printf("Pos: %g : %g\n", mouse.x, mouse.y);
 
 		a.SetPos(a.GetPos() + speed * 200 * TimeManager::GetDeltaTimeF());
 		a.SetAngle(a.GetAngle() + rot * TimeManager::GetDeltaTimeF());
-		Debugger::DrawCollider(a, 10, 4);
-		Debugger::DrawCollider(b, 10, 4);
+		//Debugger::DrawCollider(a, 10, 4);
+		//Debugger::DrawCollider(b, 10, 4);
 		//Debugger::DrawLine(a.GetPos() + Vector2F(0, a.GetRadius()) - Vector2F(1000, 0), a.GetPos() + Vector2F(0, a.GetRadius()) + Vector2F(1000, 0), 1, 1, Color::Green());
 		//Debugger::DrawLine(a.GetPos() - Vector2F(0, a.GetRadius()) - Vector2F(1000, 0), a.GetPos() - Vector2F(0, a.GetRadius()) + Vector2F(1000, 0), 1, 1, Color::Green());
 
@@ -73,15 +88,39 @@ public:
 		float dist = Collider::DistanceBetween(&a, &PolygonCollider(b), { 1, 0 });
 		//printf("%g\n", dist);
 		if (fabsf(dist) < 10) {
-			Debugger::DrawLine(a.GetPos(), b.GetPos(), 4, 0, Color::Red());
+			//Debugger::DrawLine(a.GetPos(), b.GetPos(), 4, 0, Color::Red());
 		}
-		for (int i = 0; i < 1280; i += 100)
-			Debugger::DrawLine({ (float)i, 0 }, { (float)i, 720 }, 2);
-		for (int i = 0; i < 720; i += 100)
-			Debugger::DrawLine({ 0, (float)i }, {1280, (float)i }, 2);
+		//for (int i = 0; i < 1280; i += 100)
+		//	Debugger::DrawLine({ (float)i, 0 }, { (float)i, 720 }, 2);
+		//for (int i = 0; i < 720; i += 100)
+		//	Debugger::DrawLine({ 0, (float)i }, {1280, (float)i }, 2);
 		
 		if (InputManager::IsPressed(6))
 			SceneManager::CloseScene(this);
+
+		//Debugger::DrawLine({ 300, 720 - 360 }, { 640, 720 - 460 }, 10);
+		//Debugger::DrawLine({ 640, 720 - 460 }, { 480, 720 - 120 }, 10);
+		//Debugger::DrawLine({ 480, 720 - 120 }, { 300, 720 - 360 }, 10);
+
+		DrawData player;
+		player.frame = 0;
+		player.color = Color::White();
+		player.layer = 12;
+		player.origin = { 0, 0 };
+		player.position = { 100, 100 };
+		player.rotation = 0;
+		player.size = { 200, 200 };
+		player.spriteID = text;
+		player.shader = &x;
+
+		GraphicManager::Draw(player, 1);
+
+
+		Debugger::DrawPoint({ 640, 360 }, 1000, 1, Color::Red(), 10, &x);
+		Debugger::DrawLine({ 0, 0 }, { 1280, 0 }, 10, 1);
+		Debugger::DrawLine({ 0, 720 }, { 1280, 720 }, 10, 1);
+		Debugger::DrawLine({ 1280, 720 }, { 1280, 0 }, 10, 1);
+		Debugger::DrawLine({ 0, 0 }, { 0, 720 }, 10, 1);
 	}
 	void Destroy() override 
 	{
@@ -90,6 +129,8 @@ public:
 private:
 	PolygonCollider a;
 	SquareCollider b, c;
+	SmoothLightShader x;
+	int text;
 };
 
 class TestObj : public GameObject

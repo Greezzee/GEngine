@@ -11,3 +11,8 @@ void tge::FPSCounter::Update()
 		_frames = 0;
 	}
 }
+
+void tge::FPSCounter::SetActive(bool active)
+{
+	is_active = active;
+}

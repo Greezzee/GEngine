@@ -117,6 +117,11 @@
     <ClCompile Include="engine\graphics\DrawData.cpp" />
     <ClCompile Include="Engine\Graphics\FPSCounter.cpp" />
     <ClCompile Include="engine\graphics\GraphicManager.cpp" />
+    <ClCompile Include="Engine\Graphics\ShaderManagment\BlurShader.cpp" />
+    <ClCompile Include="Engine\Graphics\ShaderManagment\LightManager\LightManager.cpp" />
+    <ClCompile Include="Engine\Graphics\ShaderManagment\PixelLightShader.cpp" />
+    <ClCompile Include="Engine\Graphics\ShaderManagment\ShaderManager.cpp" />
+    <ClCompile Include="Engine\Graphics\ShaderManagment\SmoothLightShader.cpp" />
     <ClCompile Include="engine\scenemanagment\Scene.cpp" />
     <ClCompile Include="engine\scenemanagment\SceneManager.cpp" />
     <ClCompile Include="engine\time\TimeManager.cpp" />
@@ -140,11 +145,23 @@
     <ClInclude Include="engine\graphics\DrawData.h" />
     <ClInclude Include="Engine\Graphics\FPSCounter.h" />
     <ClInclude Include="engine\graphics\GraphicManager.h" />
+    <ClInclude Include="Engine\Graphics\ShaderManagment\BlurShader.h" />
+    <ClInclude Include="Engine\Graphics\ShaderManagment\LightManager\LightManager.h" />
+    <ClInclude Include="Engine\Graphics\ShaderManagment\PixelLightShader.h" />
+    <ClInclude Include="Engine\Graphics\ShaderManagment\Shader.h" />
+    <ClInclude Include="Engine\Graphics\ShaderManagment\ShaderManager.h" />
+    <ClInclude Include="Engine\Graphics\ShaderManagment\SmoothLightShader.h" />
     <ClInclude Include="engine\scenemanagment\Scene.h" />
     <ClInclude Include="engine\scenemanagment\SceneManager.h" />
     <ClInclude Include="engine\time\TimeManager.h" />
     <ClInclude Include="engine\utility\Coordinate.h" />
     <ClInclude Include="engine\utility\Line.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Engine\Graphics\Shaders\Blur.frag" />
+    <None Include="Engine\Graphics\Shaders\PixelLight.frag" />
+    <None Include="Engine\Graphics\Shaders\SmoothLight.frag" />
+    <None Include="Engine\Graphics\Shaders\Test.frag" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

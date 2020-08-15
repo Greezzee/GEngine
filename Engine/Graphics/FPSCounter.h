@@ -10,13 +10,12 @@ namespace tge
 	{
 	public:
 		void Update();
+		void SetActive(bool active);
 	private:
 		float _sec = 0;
 		unsigned _frames = 0;
 
 		bool is_active = false;
-
-		friend class GraphicManager;
 	};
 }
 

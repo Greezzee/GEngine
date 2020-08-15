@@ -3,7 +3,7 @@
 #include "../Graphics/GraphicManager.h"
 #include "../Colliders/Collider.h"
 #include <cmath>
-bool Debugger::DrawPoint(Vector2F pos, float size, unsigned view_id, Color color, unsigned layer)
+bool Debugger::DrawPoint(Vector2F pos, float size, unsigned view_id, Color color, unsigned layer, tge::Shader* shader)
 {
 	DrawData point;
 	point.origin = { 0.5, 0.5 };
@@ -14,6 +14,7 @@ bool Debugger::DrawPoint(Vector2F pos, float size, unsigned view_id, Color color
 	point.rotation = 0;
 	point.frame = 0;
 	point.color = color;
+	point.shader = shader;
 	return GraphicManager::Draw(point, view_id);
 }
 bool Debugger::DrawLine(Vector2F start, Vector2F end, float thick, unsigned view_id, Color color, unsigned layer)

@@ -1,6 +1,7 @@
 #pragma once
 #include "../Utility/Coordinate.h"
-
+#include "ShaderManagment/Shader.h"
+#include "SFML/Graphics.hpp"
 /*!
 * Система "точек зрения" View отдалённо напоминает систему камер.
 * 
@@ -80,5 +81,15 @@ struct DrawData
 	int frame; //! Кадр анимации
 
 	Color color; //! глобальный цвет спрайта ("прибавляется" к цветам спрайта), по умолчанию белый (никак не влияет на цвет спрайта)
+
+	tge::Shader* shader; //! шейдер, который использует данный спрайт
 };
 
+namespace tge
+{
+	struct Sprite
+	{
+		sf::Sprite sprite;
+		tge::Shader* shader;
+	};
+}
