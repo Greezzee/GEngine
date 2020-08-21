@@ -1,15 +1,15 @@
 #pragma once
 #include "../Utility/Coordinate.h"
 #include "../Gameplay/GameObject.h"
-
+#include "UniversalCollider.h"
 const float PI = 3.1415926f;
 
-class SquareCollider {
+class SquareCollider : public UniversalCollider {
 public:
+	SquareCollider();
+
 	//! Задаёт нулевой коллайдер, никому не принадлежащий
 	void Init();
-
-
 
 	//! Задаёт прямоугольный коллайдер
 	//! Размер сторон size, положение в пространстве pos

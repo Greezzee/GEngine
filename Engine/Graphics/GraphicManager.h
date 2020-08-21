@@ -3,8 +3,8 @@
 #include <vector>
 #include <list>
 #include "ShaderManagment/ShaderManager.h"
-#include "ShaderManagment/Shader.h"
 #include "DrawData.h"
+#include "ShaderManagment/Shader.h"
 #include "../Utility/Coordinate.h"
 #include "../Debugger/Debugger.h"
 #include "FPSCounter.h"
@@ -143,18 +143,32 @@ public:
 	//! Вернёт разрешение экрана в пикселях
 	static Vector2U GetResolution();
 
+	//! Устанавливает, необходимо ли отправлять в консоль данные о текущем ФПС
 	static void ShowFPS(bool is_show);
 
+	//! Задаёт шейдер, который будет применяться к данному слою
+	//! Шейдер слоя применяется после шейдеров данного спрайта
+	//! Экземпляр шейдера должен храниться где-то, менеджер не обеспечивает очищение памяти
+	//! Для отключение шейдера отправлять shader = nullptr
+	//! Если слой больше максимального кол-ва слоёв, не сделает ничего
+	//! Шейдер, применённый к слою, работает в разы быстрее, чем если бы вы применяли шейдер к каждому спрайту на слое
+	static void SetLayerShader(unsigned layer, tge::Shader* shader);
+
+	//! Устанавливает кол-во слоёв, на которых возможно рисование
+	//! При уменьшении кол-ва слоёв, все данные в удалённых слоях пропадают
+	//! В том числе и привязанные к слою шейдеры
+	//! По умолчанию доступно 20 слоёв
+	static void SetLayersCount(unsigned count);
 private:
 	static sf::RenderWindow window; //! Окно SFML, на котором происходит вся отрисовка
 
 	static std::vector<tge::GraphicPrefab> sprites; //! Массив всех спрайтов игры
 
-	static std::vector<std::list<tge::Sprite>> to_draw; //! Массив всех спрайтов, которые нужно нарисовать в данный кадр
+	static std::vector<tge::GraphicLayer> to_draw; //! Массив всех спрайтов, которые нужно нарисовать в данный кадр
 
 	static std::vector<View> views; //! Массив всех Views.
 
-	static const unsigned LAYER_COUNT; //! Число всех слоёв отрисовки. НЕ ПУТАТЬ СО СЛОЯМИ ОБЪЕКТОВ. Отвечает за то, какие спрайты перекроет данный спрайт, а какие нет
+	static unsigned LAYER_COUNT; //! Число всех слоёв отрисовки. НЕ ПУТАТЬ СО СЛОЯМИ ОБЪЕКТОВ. Отвечает за то, какие спрайты перекроет данный спрайт, а какие нет
 
 	static unsigned _sprites_count;
 

@@ -1,3 +1,5 @@
+#pragma once
+
 #include "SFML/Graphics.hpp"
 #include "../../GraphicManager.h"
 #include "../../GEngine/Engine/Utility/Coordinate.h"
@@ -44,7 +46,7 @@ public:
 	static void SetView(unsigned id);
 
 	//! Устанавливает цвет глобального освещения
-	static void SetGlobalLight(static Color& glc);
+	static void SetGlobalLight(const Color& glc);
 private:
 
 	static void ApplyLight(sf::Shader* shader);

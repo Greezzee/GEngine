@@ -3,10 +3,12 @@
 PolygonCollider::PolygonCollider()
 {
 	Init();
+	_type = tge::ColliderType::POLYGON_COLLIDER;
 }
 PolygonCollider::PolygonCollider(const SquareCollider& that)
 {
 	Init(that);
+	_type = tge::ColliderType::POLYGON_COLLIDER;
 }
 
 void PolygonCollider::Init()

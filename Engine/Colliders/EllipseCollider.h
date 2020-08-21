@@ -1,6 +1,7 @@
 #pragma once
 #include "../Gameplay/GameObject.h"
 #include "../Utility/Coordinate.h"
+#include "UniversalCollider.h"
 /*!
 * Коллайдер в виде эллипса
 * Хранить можно либо как свойство Gameobject, либо просто как отдельный объект
@@ -11,10 +12,11 @@
 * IsCollide() НЕ ТРОГАТЬ
 * Остальное СИСТЕМНОЕ
 */
-class EllipseCollider
+class EllipseCollider : public UniversalCollider
 {
 public:
 
+	EllipseCollider();
 	virtual ~EllipseCollider() {};
 
 	/*!

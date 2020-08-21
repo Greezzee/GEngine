@@ -3,9 +3,11 @@
 #include "../Utility/Coordinate.h"
 #include "../Gameplay/GameObject.h"
 #include "SquareCollider.h"
+#include "UniversalCollider.h"
 #include <vector>
 
-class PolygonCollider {
+class PolygonCollider : public UniversalCollider 
+{
 public:
 
 	PolygonCollider();

@@ -4,6 +4,11 @@ const float PI = 3.1415926f;
 
 const unsigned EllipseCollider::COLLIDE_ITERATIONS = 16;
 
+EllipseCollider::EllipseCollider()
+{
+	_type = tge::ColliderType::ELLIPSE_COLLIDER;
+}
+
 void EllipseCollider::Init()
 {
 	_pos = _size = { 0, 0 };

@@ -10,5 +10,6 @@ public:
 	~SmoothLightShader();
 
 private:
-	void ApplyParameters(sf::Shader* shader) override;
+	static sf::Shader my_shader;
+	friend class tge::ShaderManager;
 };

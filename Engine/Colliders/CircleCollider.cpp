@@ -2,11 +2,13 @@
 
 CircleCollider::CircleCollider()
 {
+	_type = tge::ColliderType::CIRCLE_COLLIDER;
 	_pos = { 0, 0 };
 	_radius = 0;
 }
 CircleCollider::CircleCollider(Vector2F pos, float rad)
 {
+	_type = tge::ColliderType::CIRCLE_COLLIDER;
 	_pos = pos;
 	_radius = rad;
 }

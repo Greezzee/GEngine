@@ -1,4 +1,4 @@
-#include <vld.h>
+//#include <vld.h>
 
 #include "../Engine/AllEngine.h"
 class TestScene : public Scene
@@ -31,12 +31,14 @@ public:
 		v.virtual_position = { 0, 0 };
 		//GraphicManager::AddView(v);
 		text = GraphicManager::LoadSprite(GraphicPrefabData("Tests/player.png", Vector2F(96, 96), 1));
-		GraphicManager::AddView({ {680, 360}, {680, 360}, {0.5, 0.5}, {0, 0}, {1280, 720}, {0, 0}, {-1, 1} });
+		//GraphicManager::AddView({ {680, 360}, {1280, 720}, {0.5, 0.5}, {100, 100}, {1280, 720}, {0.5, 0.5}, {1, -1} });
 
-		LightManager::SetView(1);
+		LightManager::SetView(0);
 
 		LightManager::SetPixelSize(40);
 		LightManager::SetGlobalLight(Color(50, 50, 50, 0));
+		GraphicManager::SetLayerShader(10, &x);
+		GraphicManager::SetLayerShader(12, &x);
 	}
 	void Update() override 
 	{
@@ -64,14 +66,14 @@ public:
 
 		speed = speed.Normalized();
 
-		auto mouse = GraphicManager::ConvertRealToView(InputManager::GetMousePos(), 1);
+		auto mouse = GraphicManager::ConvertRealToView(InputManager::GetMousePos(), 0);
 
 		LightManager::ClearLightSource();
 		LightData d;
-		d.pos = {100, 100};
-		d.color = Color::White();
-		d.full_dist = 50;
-		d.any_dist = 150;
+		d.pos = mouse;
+		d.color = {255, 255, 175, 0};
+		d.full_dist = 40;
+		d.any_dist = 240;
 		d.softness = 1;
 		LightManager::AddLightSource(d);
 		//auto mouse = InputManager::GetMousePos();
@@ -79,21 +81,21 @@ public:
 
 		a.SetPos(a.GetPos() + speed * 200 * TimeManager::GetDeltaTimeF());
 		a.SetAngle(a.GetAngle() + rot * TimeManager::GetDeltaTimeF());
-		//Debugger::DrawCollider(a, 10, 4);
-		//Debugger::DrawCollider(b, 10, 4);
+		Debugger::DrawCollider(a, 10, 4);
+		Debugger::DrawCollider(b, 10, 4);
 		//Debugger::DrawLine(a.GetPos() + Vector2F(0, a.GetRadius()) - Vector2F(1000, 0), a.GetPos() + Vector2F(0, a.GetRadius()) + Vector2F(1000, 0), 1, 1, Color::Green());
 		//Debugger::DrawLine(a.GetPos() - Vector2F(0, a.GetRadius()) - Vector2F(1000, 0), a.GetPos() - Vector2F(0, a.GetRadius()) + Vector2F(1000, 0), 1, 1, Color::Green());
 
 
 		float dist = Collider::DistanceBetween(&a, &PolygonCollider(b), { 1, 0 });
 		//printf("%g\n", dist);
-		if (fabsf(dist) < 10) {
-			//Debugger::DrawLine(a.GetPos(), b.GetPos(), 4, 0, Color::Red());
+		if (Collider::IsCollide((UniversalCollider*)(&a), (UniversalCollider*)(&b))) {
+			Debugger::DrawLine(a.GetPos(), b.GetPos(), 4, 0, Color::Red());
 		}
-		//for (int i = 0; i < 1280; i += 100)
-		//	Debugger::DrawLine({ (float)i, 0 }, { (float)i, 720 }, 2);
-		//for (int i = 0; i < 720; i += 100)
-		//	Debugger::DrawLine({ 0, (float)i }, {1280, (float)i }, 2);
+		for (int i = 0; i < 1280; i += 100)
+			Debugger::DrawLine({ (float)i, 0 }, { (float)i, 720 }, 2);
+		for (int i = 0; i < 720; i += 100)
+			Debugger::DrawLine({ 0, (float)i }, {1280, (float)i }, 2);
 		
 		if (InputManager::IsPressed(6))
 			SceneManager::CloseScene(this);
@@ -102,25 +104,28 @@ public:
 		//Debugger::DrawLine({ 640, 720 - 460 }, { 480, 720 - 120 }, 10);
 		//Debugger::DrawLine({ 480, 720 - 120 }, { 300, 720 - 360 }, 10);
 
+		/*
 		DrawData player;
 		player.frame = 0;
 		player.color = Color::White();
 		player.layer = 12;
 		player.origin = { 0, 0 };
-		player.position = { 100, 100 };
 		player.rotation = 0;
 		player.size = { 200, 200 };
 		player.spriteID = text;
-		player.shader = &x;
+		player.shader = nullptr;
+		for (unsigned i = 0; i < 100; i++)
+			for (unsigned j = 0; j < 100; j++)
+			{
+				player.position = { 12 * (float)i, 9 * (float)j };
+				GraphicManager::Draw(player);
+			}
+		*/
 
-		GraphicManager::Draw(player, 1);
-
-
-		Debugger::DrawPoint({ 640, 360 }, 1000, 1, Color::Red(), 10, &x);
-		Debugger::DrawLine({ 0, 0 }, { 1280, 0 }, 10, 1);
-		Debugger::DrawLine({ 0, 720 }, { 1280, 720 }, 10, 1);
-		Debugger::DrawLine({ 1280, 720 }, { 1280, 0 }, 10, 1);
-		Debugger::DrawLine({ 0, 0 }, { 0, 720 }, 10, 1);
+		Debugger::DrawLine({ 0, 0 }, { 1280, 0 }, 10);
+		Debugger::DrawLine({ 0, 720 }, { 1280, 720 }, 10);
+		Debugger::DrawLine({ 1280, 720 }, { 1280, 0 }, 10);
+		Debugger::DrawLine({ 0, 0 }, { 0, 720 }, 10);
 	}
 	void Destroy() override 
 	{
@@ -129,7 +134,7 @@ public:
 private:
 	PolygonCollider a;
 	SquareCollider b, c;
-	SmoothLightShader x;
+	PixelLightShader x;
 	int text;
 };
 

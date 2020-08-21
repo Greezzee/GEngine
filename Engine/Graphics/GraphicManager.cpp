@@ -53,14 +53,14 @@ float GraphicManager::ConvertViewSizeToReal(float len, unsigned view_id)
 
 sf::RenderWindow GraphicManager::window;
 std::vector<GraphicPrefab> GraphicManager::sprites;
-std::vector<std::list<tge::Sprite>> GraphicManager::to_draw;
+std::vector<tge::GraphicLayer> GraphicManager::to_draw;
 unsigned GraphicManager::_sprites_count;
 std::vector<int> GraphicManager::_basic_shapes;
 unsigned GraphicManager::_engine_sprites_count;
 tge::FPSCounter GraphicManager::_fps_counter;
 
 std::vector<View> GraphicManager::views;
-const unsigned GraphicManager::LAYER_COUNT = 20;
+unsigned GraphicManager::LAYER_COUNT;
 
 void GraphicManager::Init()
 {
@@ -69,8 +69,7 @@ void GraphicManager::Init()
 
 	_sprites_count = 0;
 	sprites.resize(_engine_sprites_count);
-	to_draw.resize(LAYER_COUNT);
-	Sprite a;
+	SetLayersCount(20);
 	_engine_sprites_count = 2;
 	_basic_shapes.resize(2);
 
@@ -84,6 +83,15 @@ void GraphicManager::Init()
 	//views[Views::MAIN_MENU] = { {0, 0}, {1280, 720}, {0, 0}, {0, 0}, {1600, 900}, {0, 0}, {1, -1}};
 
 	tge::ShaderManager::Init();
+	ShowFPS(true);
+	for (unsigned i = 0; i < LAYER_COUNT; i++) {
+		to_draw[i].buffer = new sf::RenderTexture;
+		to_draw[i].buffer->create(1280, 720);
+		to_draw[i].layer_shader = nullptr;
+	}
+
+	//BlurShader::SetBlurRadius(0.01);
+	//to_draw[12].layer_shader = new ::SmoothLightShader;
 }
 
 bool GraphicManager::Update()
@@ -96,11 +104,16 @@ bool GraphicManager::Update()
 	}
 
 	window.clear();
-	for (int i = 0; i < LAYER_COUNT; i++) {
-		for (auto obj = to_draw[i].begin(); obj != to_draw[i].end(); obj++) {
-			obj->shader ? window.draw((*obj).sprite, ShaderManager::GetShader((*obj).shader)) : window.draw((*obj).sprite);
+	for (unsigned i = 0; i < LAYER_COUNT; i++) {
+		to_draw[i].buffer->clear(sf::Color(0, 0, 0, 0));
+		for (auto obj = to_draw[i].layer_sprites.begin(); obj != to_draw[i].layer_sprites.end(); obj++) {
+			obj->shader ? to_draw[i].buffer->draw((*obj).sprite, ShaderManager::GetShader((*obj).shader)) : to_draw[i].buffer->draw((*obj).sprite);
 		}
-		to_draw[i].clear();
+		to_draw[i].layer_sprites.clear();
+		to_draw[i].buffer->display();
+		sf::Sprite layer;
+		layer.setTexture(to_draw[i].buffer->getTexture());
+		to_draw[i].layer_shader ? window.draw(layer, ShaderManager::GetShader(to_draw[i].layer_shader)) : window.draw(layer);
 	}
 	
 	window.display();
@@ -117,6 +130,9 @@ void GraphicManager::Exit()
 	sprites.resize(0);
 	views.resize(0);
 	window.close();
+	for (unsigned i = 0; i < LAYER_COUNT; i++) {
+		delete to_draw[i].buffer;
+	}
 	tge::ShaderManager::Destroy();
 }
 
@@ -129,6 +145,9 @@ bool GraphicManager::Draw(DrawData& data, unsigned view_id)
 	if (data.spriteID == -1)
 		return false;
 
+	if (data.layer >= LAYER_COUNT)
+		return false;
+
 	GraphicPrefab& spr = sprites[data.spriteID];
 
 	spr.sprite.setPosition(sf::Vector2f(data.position.x, data.position.y));
@@ -136,8 +155,8 @@ bool GraphicManager::Draw(DrawData& data, unsigned view_id)
 	spr.sprite.setColor(sf::Color(data.color.r, data.color.g, data.color.b, data.color.a));
 	spr.sprite.setOrigin(sf::Vector2f(data.origin.x * spr.size.x, data.origin.y * spr.size.y));
 	spr.sprite.setScale(sf::Vector2f(data.size.x / spr.size.x, data.size.y / spr.size.y));
-	spr.sprite.setTextureRect(sf::IntRect(spr.size.x * (data.frame % spr.frames_count), 0, (int)spr.size.x, (int)spr.size.y));
-	to_draw[data.layer].push_back({ sprites[data.spriteID].sprite, data.shader });
+	spr.sprite.setTextureRect(sf::IntRect((int)spr.size.x * (data.frame % spr.frames_count), 0, (int)spr.size.x, (int)spr.size.y));
+	to_draw[data.layer].layer_sprites.push_back({ sprites[data.spriteID].sprite, data.shader });
 	return true;
 }
 
@@ -257,4 +276,17 @@ Vector2U GraphicManager::GetResolution()
 void GraphicManager::ShowFPS(bool is_active)
 {
 	_fps_counter.SetActive(is_active);
+}
+
+void GraphicManager::SetLayerShader(unsigned layer, tge::Shader* shader)
+{
+	if (layer >= LAYER_COUNT)
+		return;
+	to_draw[layer].layer_shader = shader;
+}
+
+void GraphicManager::SetLayersCount(unsigned count)
+{
+	LAYER_COUNT = count;
+	to_draw.resize(LAYER_COUNT);
 }

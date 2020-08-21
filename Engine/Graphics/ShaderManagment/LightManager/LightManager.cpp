@@ -83,7 +83,7 @@ void LightManager::ApplyPixelLight(sf::Shader* shader)
 	shader->setUniform("pixel_size", GraphicManager::ConvertViewSizeToReal(pixel_size, view_id));
 }
 
-void LightManager::SetGlobalLight(static Color& glc)
+void LightManager::SetGlobalLight(const Color& glc)
 {
 	global_light_color.x = glc.r / 255.f;
 	global_light_color.y = glc.g / 255.f;

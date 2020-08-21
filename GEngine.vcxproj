@@ -136,6 +136,7 @@
     <ClInclude Include="engine\colliders\EllipseCollider.h" />
     <ClInclude Include="engine\colliders\PolygonCollider.h" />
     <ClInclude Include="engine\colliders\SquareCollider.h" />
+    <ClInclude Include="Engine\Colliders\UniversalCollider.h" />
     <ClInclude Include="engine\control\InputManager.h" />
     <ClInclude Include="Engine\Debugger\Debugger.h" />
     <ClInclude Include="engine\gamemanagment\GameManager.h" />

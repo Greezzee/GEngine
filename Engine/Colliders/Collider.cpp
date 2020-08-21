@@ -322,6 +322,196 @@ bool Collider::IsCollide(SquareCollider* a, CircleCollider* b)
 	return IsCollide(b, a);
 }
 
+bool Collider::IsCollide(UniversalCollider* a, CircleCollider* b)
+{
+	SquareCollider* x;
+	CircleCollider* y;
+	switch (a->_type)
+	{
+	case tge::ColliderType::ERROR_COLLIDER:
+		printf("[ERROR]: Error collider type\n");
+		return false;
+	case tge::ColliderType::SQUARE_COLLIDER:
+		x = dynamic_cast<SquareCollider*>(a);
+		if (!x) {
+			printf("[ERROR]: Incorrect collider\n");
+			return false;
+		}
+		return IsCollide(x, b);
+	case tge::ColliderType::ELLIPSE_COLLIDER:
+		printf("[ERROR]: Ellipse and circle can't collide\n");
+		return false;
+	case tge::ColliderType::POLYGON_COLLIDER:
+		printf("[ERROR]: Polygon and circle can't collide\n");
+		return false;
+	case tge::ColliderType::CIRCLE_COLLIDER:
+		y = dynamic_cast<CircleCollider*>(a);
+		if (!y) {
+			printf("[ERROR]: Incorrect collider\n");
+			return false;
+		}
+		return IsCollide(y, b);
+	default:
+		printf("[ERROR]: Incorrect collider\n");
+		return false;
+		break;
+	}
+}
+
+bool Collider::IsCollide(UniversalCollider* a, EllipseCollider* b)
+{
+	EllipseCollider* x;
+	switch (a->_type)
+	{
+	case tge::ColliderType::ERROR_COLLIDER:
+		printf("[ERROR]: Error collider type\n");
+		return false;
+	case tge::ColliderType::SQUARE_COLLIDER:
+		printf("[ERROR]: Ellipse and square can't collide\n");
+		return false;
+	case tge::ColliderType::ELLIPSE_COLLIDER:
+		x = dynamic_cast<EllipseCollider*>(a);
+		if (!x) {
+			printf("[ERROR]: Incorrect collider\n");
+			return false;
+		}
+		return IsCollide(x, b);
+	case tge::ColliderType::POLYGON_COLLIDER:
+		printf("[ERROR]: Ellipse and polygon can't collide\n");
+		return false;
+	case tge::ColliderType::CIRCLE_COLLIDER:
+		printf("[ERROR]: Ellipse and circle can't collide\n");
+		return false;
+	default:
+		printf("[ERROR]: Incorrect collider\n");
+		return false;
+		break;
+	}
+}
+
+bool Collider::IsCollide(UniversalCollider* a, PolygonCollider* b)
+{
+	SquareCollider* x;
+	PolygonCollider* y;
+	switch (a->_type)
+	{
+	case tge::ColliderType::ERROR_COLLIDER:
+		printf("[ERROR]: Error collider type\n");
+		return false;
+	case tge::ColliderType::SQUARE_COLLIDER:
+		x = dynamic_cast<SquareCollider*>(a);
+		if (!x) {
+			printf("[ERROR]: Incorrect collider\n");
+			return false;
+		}
+		return IsCollide(&PolygonCollider(*x), b);
+	case tge::ColliderType::ELLIPSE_COLLIDER:
+		printf("[ERROR]: Ellipse and polygon can't collide\n");
+		return false;
+	case tge::ColliderType::POLYGON_COLLIDER:
+		y = dynamic_cast<PolygonCollider*>(a);
+		if (!y) {
+			printf("[ERROR]: Incorrect collider\n");
+			return false;
+		}
+		return IsCollide(y, b);
+	case tge::ColliderType::CIRCLE_COLLIDER:
+		printf("[ERROR]: Circle and polygon can't collide\n");
+		return false;
+	default:
+		printf("[ERROR]: Incorrect collider\n");
+		return false;
+		break;
+	}
+}
+
+bool Collider::IsCollide(UniversalCollider* a, SquareCollider* b)
+{
+	SquareCollider* x;
+	PolygonCollider* y;
+	CircleCollider* z;
+	switch (a->_type)
+	{
+	case tge::ColliderType::ERROR_COLLIDER:
+		printf("[ERROR]: Error collider type\n");
+		return false;
+	case tge::ColliderType::SQUARE_COLLIDER:
+		x = dynamic_cast<SquareCollider*>(a);
+		if (!x) {
+			printf("[ERROR]: Incorrect collider\n");
+			return false;
+		}
+		return IsCollide(x, b);
+	case tge::ColliderType::ELLIPSE_COLLIDER:
+		printf("[ERROR]: Ellipse and square can't collide\n");
+		return false;
+	case tge::ColliderType::POLYGON_COLLIDER:
+		y = dynamic_cast<PolygonCollider*>(a);
+		if (!y) {
+			printf("[ERROR]: Incorrect collider\n");
+			return false;
+		}
+		return IsCollide(y, &PolygonCollider(*b));
+	case tge::ColliderType::CIRCLE_COLLIDER:
+		z = dynamic_cast<CircleCollider*>(a);
+		if (!z) {
+			printf("[ERROR]: Incorrect collider\n");
+			return false;
+		}
+		return IsCollide(z, b);
+	default:
+		printf("[ERROR]: Incorrect collider\n");
+		return false;
+		break;
+	}
+}
+
+bool Collider::IsCollide(UniversalCollider* a, UniversalCollider* b)
+{
+	SquareCollider* x;
+	EllipseCollider* y;
+	PolygonCollider* z;
+	CircleCollider* w;
+	switch (b->_type)
+	{
+	case tge::ColliderType::ERROR_COLLIDER:
+		printf("[ERROR]: Error collider type\n");
+		return false;
+	case tge::ColliderType::SQUARE_COLLIDER:
+		x = dynamic_cast<SquareCollider*>(b);
+		if (!x) {
+			printf("[ERROR]: Incorrect collider\n");
+			return false;
+		}
+		return IsCollide(a, x);
+	case tge::ColliderType::ELLIPSE_COLLIDER:
+		y = dynamic_cast<EllipseCollider*>(b);
+		if (!y) {
+			printf("[ERROR]: Incorrect collider\n");
+			return false;
+		}
+		return IsCollide(a, y);
+	case tge::ColliderType::POLYGON_COLLIDER:
+		z = dynamic_cast<PolygonCollider*>(b);
+		if (!z) {
+			printf("[ERROR]: Incorrect collider");
+			return false;
+		}
+		return IsCollide(a, z);
+	case tge::ColliderType::CIRCLE_COLLIDER:
+		w = dynamic_cast<CircleCollider*>(b);
+		if (!w) {
+			printf("[ERROR]: Incorrect collider\n");
+			return false;
+		}
+		return IsCollide(a, w);
+	default:
+		printf("[ERROR]: Incorrect collider\n");
+		return false;
+		break;
+	}
+}
+
 float Collider::DistanceBetween(CircleCollider* a, SquareCollider* b, const Vector2F& dir)
 {
 	float min_a, min_b, max_a, max_b;

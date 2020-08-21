@@ -248,6 +248,9 @@
     <ClInclude Include="Engine\Graphics\ShaderManagment\PixelLightShader.h">
       <Filter>Header Files\Engine\Graphics\ShaderManagment</Filter>
     </ClInclude>
+    <ClInclude Include="Engine\Colliders\UniversalCollider.h">
+      <Filter>Header Files\Engine\Colliders</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="Engine\Graphics\Shaders\SmoothLight.frag">

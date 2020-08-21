@@ -43,9 +43,6 @@ float intersect (vec4 wall, vec4 ray) {
 	if (!(betw(ray.x, ray.z, res.x) && betw(ray.y, ray.w, res.y)))
 		return 0.0;
     return 1.0;
-	
-
-
 }
 
 void main()
@@ -56,16 +53,11 @@ void main()
 	wall[2] = vec4(480.0, 120.0, 300.0, 360.0);
 	gl_FragColor = vec4(0.0, 0.0, 0.0, 0.0);
 	for(int i = 0; i < 1; i++) {
-		//float dist = length((gl_FragCoord.xy + vec2(40.0, 40.0) - mod(gl_FragCoord.xy, 40.0) - pos) - mod(gl_FragCoord.xy + vec2(40.0, 40.0) - mod(gl_FragCoord.xy, 40.0) - pos, 40.0));
 		float dist = length(gl_FragCoord.xy - pos[i]);
 		vec4 light = (texture2D(texture, gl_TexCoord[0].xy) - (vec4(1.0, 1.0, 1.0, 1.0) - color[i])) * pow(2.0 / dist, 0.2);
 		for (int j = 0; j < 3; j++) {
 			float k = intersect(wall[j], vec4(gl_FragCoord.xy, pos[i]));
 			if (k >= EPS) {
-				//float b_dist = min(length(pos[i] - wall[j].xy) + length(wall[j].xy - gl_FragCoord.xy), length(pos[i] - wall[j].zw) + length(wall[j].zw - gl_FragCoord.xy));
-				//float t = 0.0;
-				//if (b_dist < dist + 100.0)
-				//	t = (b_dist - dist) / 100.0 * 0.5;
 				light *= 0.5;
 			}
 		}

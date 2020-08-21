@@ -1,8 +1,9 @@
 #pragma once
 
 #include "../Utility/Coordinate.h"
+#include "UniversalCollider.h"
 
-class CircleCollider
+class CircleCollider : public UniversalCollider
 {
 public:
 	CircleCollider();

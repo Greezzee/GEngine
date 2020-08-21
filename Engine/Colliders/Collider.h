@@ -31,6 +31,27 @@ public:
 	//! ѕровер€ет, пересекаютс€ ли два данных многоугольника
 	static bool IsCollide(PolygonCollider* a, PolygonCollider* b);
 
+	//! ѕровер€ет, пересекаетс€ ли данный произвольный соллайдер с данным кругом
+	static bool IsCollide(UniversalCollider* a, CircleCollider* b);
+
+	//! ѕровер€ет, пересекаетс€ ли данный произвольный соллайдер с данным эллипсом
+	static bool IsCollide(UniversalCollider* a, EllipseCollider* b);
+
+	//! ѕровер€ет, пересекаетс€ ли данный произвольный соллайдер с данным многоугольником
+	static bool IsCollide(UniversalCollider* a, PolygonCollider* b);
+
+	//! ѕровер€ет, пересекаетс€ ли данный произвольный соллайдер с данным пр€моугольником
+	static bool IsCollide(UniversalCollider* a, SquareCollider* b);
+
+	//! ѕровер€ет, пересекаютс€ ли два данных произвольных коллайдера
+	//! ≈сли произвольные коллайдеры на самом деле €вл€ютс€ несовместимой парой, выведет ошибку и вернЄт false
+	//! Ќесовместимые пары на данный момент:
+	//! EllipseCollider с любыми другими
+	//! CircleCollider с PolygonCollider и с EllipseCollider
+	//! SquareCollider с EllipseCollider
+	//! PolygonCollider с EllipseCollider и CircleCollider
+	static bool IsCollide(UniversalCollider* a, UniversalCollider* b);
+
 	//! ¬ыпускает из центра коллайдера a вектор в направлении direction
 	//! ќпредел€ет, сколько должен пройти коллайдер a в направлении данного вектора, чтобы столкнутьс€ в b
 	//! ¬ернЄт искомое рассто€ние в тех же единицах, в которых заданы коллайдеры
@@ -55,6 +76,8 @@ public:
 	//! ¬ернЄт искомое рассто€ние в тех же единицах, в которых заданы коллайдеры
 	//! ¬ернЄт NAN, если при движении в данном направлении, a никогда не встретит b
 	static float DistanceBetween(PolygonCollider* a, PolygonCollider* b, const Vector2F& direction);
+
+	static float DistanceBetween(UniversalCollider* a, UniversalCollider* b, const Vector2F& direction);
 
 private:
 

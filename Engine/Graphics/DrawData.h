@@ -1,7 +1,8 @@
 #pragma once
+#include <list>
+#include "SFML/Graphics.hpp"
 #include "../Utility/Coordinate.h"
 #include "ShaderManagment/Shader.h"
-#include "SFML/Graphics.hpp"
 /*!
 * Система "точек зрения" View отдалённо напоминает систему камер.
 * 
@@ -87,9 +88,17 @@ struct DrawData
 
 namespace tge
 {
+
 	struct Sprite
 	{
 		sf::Sprite sprite;
 		tge::Shader* shader;
+	};
+
+	struct GraphicLayer
+	{
+		std::vector<tge::Sprite> layer_sprites;
+		tge::Shader* layer_shader = nullptr;
+		sf::RenderTexture* buffer = nullptr;
 	};
 }

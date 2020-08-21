@@ -1,6 +1,12 @@
 #include "SquareCollider.h"
-
+#include "UniversalCollider.h"
 #include <cmath>
+
+SquareCollider::SquareCollider():
+	_size({ 0, 0 }), _pos({ 0, 0 }), _angle(0), _shape_angle(0) 
+{
+	_type = tge::ColliderType::SQUARE_COLLIDER;
+}
 
 //! Задаёт нулевой коллайдер, никому не принадлежащий
 void SquareCollider::Init()

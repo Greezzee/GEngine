@@ -10,8 +10,10 @@ namespace tge {
 		static sf::Shader* GetShader(Shader* shader);
 		static void Destroy();
 	private:
+
+		static void LoadShader(sf::Shader& shader, unsigned ID);
+
 		static std::vector<std::string> _shaders_path;
-		static std::vector<sf::Shader*> _shaders;
 		static bool _is_aviable;
 	};
 }

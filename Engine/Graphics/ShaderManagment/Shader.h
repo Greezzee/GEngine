@@ -1,7 +1,7 @@
 #pragma once
 #include "SFML/Graphics.hpp"
 namespace tge {
-	enum ShaderType
+	enum class ShaderType
 	{
 		EmptyShader = -1,
 		SmoothLightShader,
@@ -12,12 +12,11 @@ namespace tge {
 	{
 	public:
 		Shader() :
-			_type(EmptyShader) {}
+			_type(ShaderType::EmptyShader) {}
 		virtual ~Shader() {}
+
 	protected:
 		ShaderType _type;
-		virtual void ApplyParameters(sf::Shader* shader) = 0;
-
 		friend class ShaderManager;
 	};
 }

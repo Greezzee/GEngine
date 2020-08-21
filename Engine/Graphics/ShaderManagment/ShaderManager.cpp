@@ -1,4 +1,7 @@
 #include "ShaderManager.h"
+#include "SmoothLightShader.h"
+#include "PixelLightShader.h"
+#include "BlurShader.h"
 #include "LightManager/LightManager.h"
 #include <iostream>
 using namespace tge;
@@ -9,7 +12,6 @@ std::vector<std::string> ShaderManager::_shaders_path = {
 	"Engine/Graphics/Shaders/Blur.frag"
 };
 
-std::vector<sf::Shader*> ShaderManager::_shaders;
 bool ShaderManager::_is_aviable;
 
 void ShaderManager::Init()
@@ -19,33 +21,40 @@ void ShaderManager::Init()
 		_is_aviable = false;
 		return;
 	}
-	_shaders.resize(_shaders_path.size());
 	_is_aviable = true;
-	for (unsigned i = 0; i < _shaders.size(); i++) {
-		_shaders[i] = new sf::Shader;
-		bool x = _shaders[i]->loadFromFile(_shaders_path[i], sf::Shader::Fragment);
-		if (!x) {
-			_is_aviable = false;
-			std::cout << "Shader: [" << _shaders_path[i] << "] not aviable\nShaders disabled\n";
-		}
-	}
-
+	
+	LoadShader(SmoothLightShader::my_shader, 0);
+	LoadShader(PixelLightShader::my_shader, 1);
+	LoadShader(BlurShader::my_shader, 2);
 }
 
-void ShaderManager::Destroy()
-{
-	for (unsigned i = 0; i < _shaders.size(); i++)
-		delete _shaders[i];
-	_shaders.resize(0);
-}
+void ShaderManager::Destroy() {}
 
 sf::Shader* ShaderManager::GetShader(Shader* shader)
 {
-	if (shader->_type == ShaderType::SmoothLightShader)
-		LightManager::ApplyLight(_shaders[shader->_type]);
-	if (shader->_type == ShaderType::PixelLightShader)
-		LightManager::ApplyPixelLight(_shaders[shader->_type]);
-	shader->ApplyParameters(_shaders[shader->_type]);
-	return _shaders[shader->_type];
+	switch (shader->_type)
+	{
+	case ShaderType::BlurShader:
+		return &BlurShader::my_shader;
+	case ShaderType::PixelLightShader:
+		LightManager::ApplyPixelLight(&PixelLightShader::my_shader);
+		return &PixelLightShader::my_shader;
+	case ShaderType::SmoothLightShader:
+		LightManager::ApplyLight(&SmoothLightShader::my_shader);
+		return &SmoothLightShader::my_shader;
+	default:
+		return nullptr;
+		break;
+	}
+}
+
+void ShaderManager::LoadShader(sf::Shader& shader, unsigned ID)
+{
+	bool x;
+	x = shader.loadFromFile(_shaders_path[ID], sf::Shader::Fragment);
+	if (!x) {
+		_is_aviable = false;
+		std::cout << "Shader: [" << _shaders_path[ID] << "] not aviable\nShaders disabled\n";
+	}
 }
 
