@@ -1,5 +1,5 @@
 #include <vld.h>
-
+#include <iostream>
 #include "../Engine/AllEngine.h"
 class TestScene : public Scene
 {
@@ -167,6 +167,7 @@ void test(GameObject* t, void* data = nullptr) {
 	if (t != nullptr) {
 		Vector2F a = t->GetPos();
 		printf("Hi, I'm object at pos (%g; %g)!\n", a.x, a.y);
+		std::cout << *((std::string*)data) << "\n";
 	}
 	else
 		printf("But nobody came\n");
@@ -189,11 +190,11 @@ class GameplayScene : public Scene
 		field.SpawnObject(new_obj1);
 		field.SpawnObject(new_obj2);
 		field.SpawnObject(new_obj3);
-		field.ApplyToLayerObjects(0, test);
+		field.ApplyToLayerObjects(0, test, &std::string("And I Say A"));
 		field.KillObject(new_obj3.obj);
-		field.ApplyToLayerObjects(0, test);
+		field.ApplyToLayerObjects(0, test, &std::string("And I Say B"));
 		field.ClearKilledObjects();
-		field.ApplyToLayerObjects(0, test);
+		field.ApplyToLayerObjects(0, test, &std::string("And I Say C"));
 	}
 	void Update() override
 	{
