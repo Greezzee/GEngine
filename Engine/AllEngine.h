@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Colliders/Collider.h"
+#include "Colliders/UniversalCollider.h"
 #include "Control/InputManager.h"
 #include "Debugger/Debugger.h"
 #include "GameManagment/GameManager.h"

@@ -61,17 +61,29 @@ struct InputManager
 	//! НЕ ТРОГАТЬ, автоматически вызывается каждый кадр в главном цикле
 	static void Update();
 
-	//! Вернёт true в кадр, в который виртуальная клавиша key нажимается, иначе false
+	//! Вернёт true в кадр, в который виртуальная клавиша code нажимается, иначе false
 	static bool IsPressed(unsigned char code);
 
-	//! Вернёт true в кадр, в который виртуальная клавиша key отжимается, иначе false
+	//! Вернёт true в кадр, в который виртуальная клавиша code отжимается, иначе false
 	static bool IsRealesed(unsigned char code);
 
-	//! Вернёт true если key нажата, иначе false
+	//! Вернёт true если code нажата, иначе false
 	static bool IsUp(unsigned char code);
 
-	//! Вернёт true если key не нажата, иначе false
+	//! Вернёт true если code не нажата, иначе false
 	static bool IsDown(unsigned char code);
+
+	//! Вернёт true в кадр, в который реальная клавиша key нажимается, иначе false
+	static bool IsPressed(KeyboardKey key);
+
+	//! Вернёт true в кадр, в который реальная клавиша key отжимается, иначе false
+	static bool IsRealesed(KeyboardKey key);
+
+	//! Вернёт true если key нажата, иначе false
+	static bool IsUp(KeyboardKey key);
+
+	//! Вернёт true если key не нажата, иначе false
+	static bool IsDown(KeyboardKey key);
 
 	//! Вернёт true в кадр, в который клавиша мыши key нажимается, иначе false
 	static bool IsPressed(MouseKey key);
@@ -91,6 +103,10 @@ struct InputManager
 	//! Связывает клавишу с кодом. При отправлении функциям IsUp, IsDown, ... кода, получете информацию о связанной клавише
 	//! code не больше 255
 	static void LinkToCode(KeyboardKey key, unsigned char code);
+
+	//! Вернёт первую попавшуюся KeyboradKey, которая нажимается (IsPressed = true)
+	//! Если ниодна клавиша не нажата, вернёт KeyboardKey::NOTHING
+	static KeyboardKey GetPressedKey();
 private:
 	static MouseData _mouse_info; //! Информация о положении мыши
 

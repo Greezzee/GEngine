@@ -3,7 +3,7 @@
 
 //! Шейдер гладкого освещения
 //! Источники света контролирует LightManager
-class SmoothLightShader : public tge::Shader
+class SmoothLightShader : public Shader
 {
 public:
 	SmoothLightShader();
@@ -11,5 +11,5 @@ public:
 
 private:
 	static sf::Shader my_shader;
-	friend class tge::ShaderManager;
+	friend class ShaderManager;
 };

@@ -83,7 +83,7 @@ struct DrawData
 
 	Color color; //! глобальный цвет спрайта ("прибавляется" к цветам спрайта), по умолчанию белый (никак не влияет на цвет спрайта)
 
-	tge::Shader* shader; //! шейдер, который использует данный спрайт
+	Shader* shader; //! шейдер, который использует данный спрайт
 };
 
 namespace tge
@@ -92,13 +92,13 @@ namespace tge
 	struct Sprite
 	{
 		sf::Sprite sprite;
-		tge::Shader* shader;
+		Shader* shader;
 	};
 
 	struct GraphicLayer
 	{
 		std::vector<tge::Sprite> layer_sprites;
-		tge::Shader* layer_shader = nullptr;
+		Shader* layer_shader = nullptr;
 		sf::RenderTexture* buffer = nullptr;
 	};
 }

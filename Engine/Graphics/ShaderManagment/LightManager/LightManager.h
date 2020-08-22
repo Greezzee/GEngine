@@ -2,7 +2,7 @@
 
 #include "SFML/Graphics.hpp"
 #include "../../GraphicManager.h"
-#include "../../GEngine/Engine/Utility/Coordinate.h"
+#include "../../../Utility/Coordinate.h"
 /*
 uniform int source_count;
 uniform vec2 pos[128];
@@ -65,5 +65,5 @@ private:
 	static float pixel_size;
 	static sf::Glsl::Vec4 global_light_color;
 
-	friend class tge::ShaderManager;
+	friend class ShaderManager;
 };

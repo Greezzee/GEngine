@@ -4,7 +4,7 @@
 
 //! Задаёт шейдер пиксельного освещения. 
 //! Источники света контролирует LightManager
-class PixelLightShader : public tge::Shader
+class PixelLightShader : public Shader
 {
 public:
 	PixelLightShader();
@@ -12,5 +12,5 @@ public:
 
 private:
 	static sf::Shader my_shader;
-	friend class tge::ShaderManager;
+	friend class ShaderManager;
 };

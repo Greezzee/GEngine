@@ -82,11 +82,11 @@ void GraphicManager::Init()
 	//views[Views::PLAYER_CAM] = { {0, 0}, {1280, 720}, {0, 0}, {0, 0}, {1600, 900}, {0.5, 0.5}, {1, -1}};
 	//views[Views::MAIN_MENU] = { {0, 0}, {1280, 720}, {0, 0}, {0, 0}, {1600, 900}, {0, 0}, {1, -1}};
 
-	tge::ShaderManager::Init();
+	ShaderManager::Init();
 	ShowFPS(true);
 	for (unsigned i = 0; i < LAYER_COUNT; i++) {
 		to_draw[i].buffer = new sf::RenderTexture;
-		to_draw[i].buffer->create(1280, 720);
+		to_draw[i].buffer->create(GetResolution().x, GetResolution().y);
 		to_draw[i].layer_shader = nullptr;
 	}
 
@@ -133,7 +133,7 @@ void GraphicManager::Exit()
 	for (unsigned i = 0; i < LAYER_COUNT; i++) {
 		delete to_draw[i].buffer;
 	}
-	tge::ShaderManager::Destroy();
+	ShaderManager::Destroy();
 }
 
 bool GraphicManager::Draw(DrawData& data, unsigned view_id)
@@ -265,6 +265,11 @@ void GraphicManager::SetResolution(Vector2U new_size)
 	window.create(sf::VideoMode(new_size.x, new_size.y), "Test", sf::Style::Titlebar | sf::Style::Close);
 	views[0].real_size = Vector2F((float)new_size.x, (float)new_size.y);
 	views[0].virtual_size = views[0].real_size;
+
+	for (unsigned i = 0; i < LAYER_COUNT; i++) {
+		to_draw[i].buffer->clear(sf::Color(0, 0, 0, 0));
+		to_draw[i].buffer->create(GetResolution().x, GetResolution().y);
+	}
 }
 
 Vector2U GraphicManager::GetResolution()
@@ -278,7 +283,7 @@ void GraphicManager::ShowFPS(bool is_active)
 	_fps_counter.SetActive(is_active);
 }
 
-void GraphicManager::SetLayerShader(unsigned layer, tge::Shader* shader)
+void GraphicManager::SetLayerShader(unsigned layer, Shader* shader)
 {
 	if (layer >= LAYER_COUNT)
 		return;
@@ -287,6 +292,20 @@ void GraphicManager::SetLayerShader(unsigned layer, tge::Shader* shader)
 
 void GraphicManager::SetLayersCount(unsigned count)
 {
-	LAYER_COUNT = count;
-	to_draw.resize(LAYER_COUNT);
+	if (count > LAYERS_COUNT) {
+		to_draw.resize(count);
+		for (unsigned i = LAYERS_COUNT; i < count; i++) {
+			to_draw[i].buffer = new sf::RenderTexture;
+			to_draw[i].buffer->create(GetResolution().x, GetResolution().y);
+			to_draw[i].layer_shader = nullptr;
+		}
+		LAYER_COUNT = count;
+	}
+	else if (count < LAYERS_COUNT) {
+		for (unsigned i = count; i < LAYERS_COUNT; i++) {
+			delete to_draw[i].buffer;
+		}
+		LAYER_COUNT = count;
+		to_draw.resize(LAYER_COUNT);
+	}
 }

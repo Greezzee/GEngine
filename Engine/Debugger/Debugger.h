@@ -9,7 +9,7 @@ class Debugger
 {
 public:
 	//! ������ ����� ���������� ����� � ������� � pos, ����� ������� size
-	static bool DrawPoint(Vector2F pos, float size, unsigned view_id = 0, Color color = Color::White(), unsigned layer = 10, tge::Shader* shader = nullptr);
+	static bool DrawPoint(Vector2F pos, float size, unsigned view_id = 0, Color color = Color::White(), unsigned layer = 10, Shader* shader = nullptr);
 
 	//! ������ ����� ����� ����� ������� start � end, ������� ����� thick
 	static bool DrawLine(Vector2F start, Vector2F end, float thick, unsigned view_id = 0, Color color = Color::White(), unsigned layer = 10);

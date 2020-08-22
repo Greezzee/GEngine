@@ -15,7 +15,7 @@ void InputManager::Init()
 		_key_data[i] = { false, false, false };
 	}
 	for (int i = 0; i < 255; i++)
-		_virtual_keys[i] = NOTHING;
+		_virtual_keys[i] = KeyboardKey::NOTHING;
 
 	_mouse_info = { {0, 0}, {false, false, false}, {false, false, false} };
 
@@ -179,6 +179,26 @@ bool InputManager::IsRealesed(unsigned char key)
 	return _key_data[_virtual_keys[key]].is_realesed;
 }
 
+bool InputManager::IsDown(KeyboardKey key)
+{
+	return _key_data[key].is_down;
+}
+
+bool InputManager::IsUp(KeyboardKey key)
+{
+	return !_key_data[key].is_down;
+}
+
+bool InputManager::IsPressed(KeyboardKey key)
+{
+	return _key_data[key].is_pressed;
+}
+
+bool InputManager::IsRealesed(KeyboardKey key)
+{
+	return _key_data[key].is_realesed;
+}
+
 Vector2F InputManager::GetMousePos()
 {
 	return _mouse_info.pos;
@@ -241,4 +261,13 @@ bool InputManager::IsDown(MouseKey key)
 void InputManager::LinkToCode(KeyboardKey key, unsigned char code)
 {
 	_virtual_keys[code] = key;
+}
+
+KeyboardKey InputManager::GetPressedKey()
+{
+	for (unsigned i = 1; i < KeysCount; i++) {
+		if (IsPressed((KeyboardKey)i))
+			return (KeyboardKey)i;
+	}
+	return KeyboardKey::NOTHING;
 }

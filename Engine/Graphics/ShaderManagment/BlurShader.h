@@ -2,7 +2,7 @@
 #include "Shader.h"
 #include "ShaderManager.h"
 //! Задаёт шейдер "размытия"
-class BlurShader : public tge::Shader
+class BlurShader : public Shader
 {
 public:
 	BlurShader();
@@ -14,5 +14,5 @@ public:
 private:
 	static float _radius;
 	static sf::Shader my_shader;
-	friend class tge::ShaderManager;
+	friend class ShaderManager;
 };

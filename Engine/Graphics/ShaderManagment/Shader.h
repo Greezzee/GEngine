@@ -8,15 +8,16 @@ namespace tge {
 		PixelLightShader,
 		BlurShader
 	};
-	class Shader
-	{
-	public:
-		Shader() :
-			_type(ShaderType::EmptyShader) {}
-		virtual ~Shader() {}
-
-	protected:
-		ShaderType _type;
-		friend class ShaderManager;
-	};
 }
+
+class Shader
+{
+public:
+	Shader() :
+		_type(tge::ShaderType::EmptyShader) {}
+	virtual ~Shader() {}
+
+protected:
+	tge::ShaderType _type;
+	friend class ShaderManager;
+};

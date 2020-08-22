@@ -51,17 +51,17 @@ public:
 
 		Vector2F speed = { 0, 0 };
 		float rot = 0;
-		if (InputManager::IsDown(2))
+		if (InputManager::IsDown(KeyboardKey::S))
 			speed.y += 1;
-		if (InputManager::IsDown(0))
+		if (InputManager::IsDown(KeyboardKey::W))
 			speed.y -= 1;
-		if (InputManager::IsDown(1))
+		if (InputManager::IsDown(KeyboardKey::A))
 			speed.x -= 1;
-		if (InputManager::IsDown(3))
+		if (InputManager::IsDown(KeyboardKey::D))
 			speed.x += 1;
-		if (InputManager::IsDown(4))
+		if (InputManager::IsDown(KeyboardKey::Q))
 			rot -= 1;
-		if (InputManager::IsDown(5))
+		if (InputManager::IsDown(KeyboardKey::E))
 			rot += 1;
 
 		speed = speed.Normalized();
@@ -97,7 +97,7 @@ public:
 		for (int i = 0; i < 720; i += 100)
 			Debugger::DrawLine({ 0, (float)i }, {1280, (float)i }, 2);
 		
-		if (InputManager::IsPressed(6))
+		if (InputManager::IsPressed(KeyboardKey::ESC))
 			SceneManager::CloseScene(this);
 
 		//Debugger::DrawLine({ 300, 720 - 360 }, { 640, 720 - 460 }, 10);
