@@ -3,7 +3,7 @@
 
 #include "../Utility/Coordinate.h"
 
-class GameField;
+class ObjectContainer;
 
 /*!
 * Абстрактный класс, от которого должны наследоваться все игровые объекты (персонаж, враг, элемент окружения, комната, дверь и тд)
@@ -50,19 +50,20 @@ public:
 	float GetRotation();
 	void SetRotation(float angle);
 
-	//! Убедительная просьба НЕ ТРОГАТЬ ЭТУ ФУНКЦИЮ ВООБЩЕ НИКОГДА
-	void SetID(unsigned new_id);
-	unsigned GetID();
-
-	//! Убедительная просьба НЕ ТРОГАТЬ ЭТУ ФУНКЦИЮ ВООБЩЕ НИКОГДА
-	void SetGamefield(GameField* field);
-	GameField* GetGamefield();
-
 	void SetTag(const std::string& new_tag);
 	const std::string& GetTag();
 
 	virtual ~GameObject() {};
 protected:
+
+	//! Убедительная просьба НЕ ТРОГАТЬ ЭТУ ФУНКЦИЮ ВООБЩЕ НИКОГДА
+	void SetID(unsigned new_id);
+	unsigned GetID() const;
+
+	//! Убедительная просьба НЕ ТРОГАТЬ ЭТУ ФУНКЦИЮ ВООБЩЕ НИКОГДА
+	void SetGamefield(ObjectContainer* field);
+	ObjectContainer* GetGamefield();
+
 	unsigned _ID; //! Динамический номер объекта в массиве всех объектов. НЕ ТРОГАТЬ ЕГО И НЕ МЕНЯТЬ ЕГО
 	std::string _tag; //! Строка, в которой может быть записано всё, что угодно. Никак не используется внешним кодом
 
@@ -70,8 +71,9 @@ protected:
 	Vector2F _basic_direction; //! WIP, всегда устанавливать значение по умолчанию! (1, 0)
 	float _angle = 0; //! Угол поворота объекта в радианах против часовой стрелки
 
-	GameField* gamefield = nullptr; //! Указатель на игровое поле, в котором живёт данный игровой объект
+	ObjectContainer* gamefield = nullptr; //! Указатель на игровое поле, в котором живёт данный игровой объект
 
 	friend class Collider;
+	friend class ObjectContainer;
 };
 

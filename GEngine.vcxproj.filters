@@ -111,9 +111,6 @@
     <ClCompile Include="engine\colliders\EllipseCollider.cpp">
       <Filter>Source Files\Engine\Colliders</Filter>
     </ClCompile>
-    <ClCompile Include="engine\gameplay\GameField.cpp">
-      <Filter>Source Files\Engine\Gameplay</Filter>
-    </ClCompile>
     <ClCompile Include="engine\gamemanagment\GameManager.cpp">
       <Filter>Source Files\Engine\GameManagment</Filter>
     </ClCompile>
@@ -168,6 +165,12 @@
     <ClCompile Include="Engine\Graphics\ShaderManagment\PixelLightShader.cpp">
       <Filter>Source Files\Engine\Graphics\ShaderManagment</Filter>
     </ClCompile>
+    <ClCompile Include="engine\gameplay\ObjectContainer.cpp">
+      <Filter>Source Files\Engine\Gameplay</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Gameplay\ObjectsArray.cpp">
+      <Filter>Source Files\Engine\Gameplay</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="engine\colliders\CircleCollider.h">
@@ -184,9 +187,6 @@
     </ClInclude>
     <ClInclude Include="engine\colliders\EllipseCollider.h">
       <Filter>Header Files\Engine\Colliders</Filter>
-    </ClInclude>
-    <ClInclude Include="engine\gameplay\GameField.h">
-      <Filter>Header Files\Engine\Gameplay</Filter>
     </ClInclude>
     <ClInclude Include="engine\gamemanagment\GameManager.h">
       <Filter>Header Files\Engine\GameManagment</Filter>
@@ -250,6 +250,9 @@
     </ClInclude>
     <ClInclude Include="Engine\Colliders\UniversalCollider.h">
       <Filter>Header Files\Engine\Colliders</Filter>
+    </ClInclude>
+    <ClInclude Include="engine\gameplay\ObjectContainer.h">
+      <Filter>Header Files\Engine\Gameplay</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

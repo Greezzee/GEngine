@@ -79,19 +79,9 @@ void GraphicManager::Init()
 
 	views.resize(1);
 	views[0] = { {0, 0}, {1280, 720}, {0, 0}, {0, 0}, {1280, 720}, {0, 0}, {1, 1} };
-	//views[Views::PLAYER_CAM] = { {0, 0}, {1280, 720}, {0, 0}, {0, 0}, {1600, 900}, {0.5, 0.5}, {1, -1}};
-	//views[Views::MAIN_MENU] = { {0, 0}, {1280, 720}, {0, 0}, {0, 0}, {1600, 900}, {0, 0}, {1, -1}};
 
 	ShaderManager::Init();
-	ShowFPS(true);
-	for (unsigned i = 0; i < LAYER_COUNT; i++) {
-		to_draw[i].buffer = new sf::RenderTexture;
-		to_draw[i].buffer->create(GetResolution().x, GetResolution().y);
-		to_draw[i].layer_shader = nullptr;
-	}
 
-	//BlurShader::SetBlurRadius(0.01);
-	//to_draw[12].layer_shader = new ::SmoothLightShader;
 }
 
 bool GraphicManager::Update()
@@ -125,14 +115,14 @@ bool GraphicManager::Update()
 
 void GraphicManager::Exit()
 {
+	for (unsigned i = 0; i < LAYER_COUNT; i++) {
+		delete to_draw[i].buffer;
+	}
 	to_draw.resize(0);
 	_basic_shapes.resize(0);
 	sprites.resize(0);
 	views.resize(0);
 	window.close();
-	for (unsigned i = 0; i < LAYER_COUNT; i++) {
-		delete to_draw[i].buffer;
-	}
 	ShaderManager::Destroy();
 }
 
@@ -292,17 +282,17 @@ void GraphicManager::SetLayerShader(unsigned layer, Shader* shader)
 
 void GraphicManager::SetLayersCount(unsigned count)
 {
-	if (count > LAYERS_COUNT) {
+	if (count > LAYER_COUNT) {
 		to_draw.resize(count);
-		for (unsigned i = LAYERS_COUNT; i < count; i++) {
+		for (unsigned i = LAYER_COUNT; i < count; i++) {
 			to_draw[i].buffer = new sf::RenderTexture;
 			to_draw[i].buffer->create(GetResolution().x, GetResolution().y);
 			to_draw[i].layer_shader = nullptr;
 		}
 		LAYER_COUNT = count;
 	}
-	else if (count < LAYERS_COUNT) {
-		for (unsigned i = count; i < LAYERS_COUNT; i++) {
+	else if (count < LAYER_COUNT) {
+		for (unsigned i = count; i < LAYER_COUNT; i++) {
 			delete to_draw[i].buffer;
 		}
 		LAYER_COUNT = count;

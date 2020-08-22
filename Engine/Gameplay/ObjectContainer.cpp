@@ -1,42 +1,27 @@
-#include "GameField.h"
+#include "ObjectContainer.h"
 
 #include <stdlib.h>
 #include <stdio.h>
 using namespace tge;
-void GameField::Init()
+void ObjectContainer::Init()
 {
 	_objects = new ObjectsArray;
 
-	_objects->top = 0;
-	_objects->to_kill.top = 0;
-	for (unsigned i = 0; i < MAX_OBJECTS; i++) {
-		_objects->obj[i].obj = nullptr;
-		for (int j = 0; j < LAYERS_COUNT; j++)
-			_objects->obj[i].layer_pos[j] = -1;
-		_objects->to_kill.obj_id[i] = -1;
-	}
-
-	for (unsigned i = 0; i < LAYERS_COUNT; i++) {
-		_objects->layers[i].top = 0;
-		for (unsigned j = 0; j < MAX_OBJECTS; j++)
-			_objects->layers[i].obj_id[j] = -1;
-	}
+	_objects->SetLayersCount(0);
+	_objects->SetMaxObjects(0);
 }
 
-void GameField::Update()
+void ObjectContainer::Init(unsigned max_obj, unsigned layers_count)
 {
-	for (unsigned i = 0; i < _objects->top; i++)
-		_objects->obj[i].obj->Update();
+	_objects = new ObjectsArray;
 
-	for (unsigned i = 0; i < _objects->top; i++)
-		_objects->obj[i].obj->Draw();
-	
-	ClearKilledObjects();
+	_objects->SetMaxObjects(max_obj);
+	_objects->SetLayersCount(layers_count);
 }
 
-void GameField::Destroy()
+void ObjectContainer::Destroy()
 {
-	for (unsigned i = 0; i < MAX_OBJECTS; i++)
+	for (unsigned i = 0; i < _objects->MAX_OBJECTS; i++)
 		if (_objects->obj[i].obj != nullptr) {
 			KillObject(i);
 		}
@@ -44,13 +29,13 @@ void GameField::Destroy()
 	delete _objects;
 }
 
-void GameField::SpawnObject(const GameobjectSpawnData& new_object)
+void ObjectContainer::SpawnObject(const GameobjectSpawnData& new_object)
 {
-	if (_objects->top < MAX_OBJECTS) {
+	if (_objects->top < _objects->MAX_OBJECTS) {
 		_objects->obj[_objects->top].obj = new_object.obj;
 		new_object.obj->SetID(_objects->top);
 		new_object.obj->SetGamefield(this);
-		for (int i = 0; i < LAYERS_COUNT; i++) {
+		for (int i = 0; i < _objects->LAYERS_COUNT; i++) {
 			if (new_object.is_on_layer[i]) {
 				_objects->layers[i].obj_id[_objects->layers[i].top] = _objects->top;
 				_objects->obj[_objects->top].layer_pos[i] = _objects->layers[i].top;
@@ -63,31 +48,26 @@ void GameField::SpawnObject(const GameobjectSpawnData& new_object)
 		throw;
 }
 
-void GameField::KillObject(const unsigned ID)
+void ObjectContainer::KillObject(const unsigned ID)
 {
-	if (_objects->to_kill.top < MAX_OBJECTS) {
+	if (_objects->to_kill.top < _objects->MAX_OBJECTS) {
 		_objects->to_kill.obj_id[_objects->to_kill.top] = ID;
 		_objects->to_kill.top++;
 	}
 }
 
-void GameField::KillObject(const GameObject* object)
+void ObjectContainer::KillObject(const GameObject* object)
 {
-	for (unsigned i = 0; i < _objects->top; i++) {
-		if (_objects->obj[i].obj == object) {
-			KillObject(i);
-			break;
-		}
-	}
+	KillObject(object->GetID());
 }
 
-void GameField::ClearKilledObjects()
+void ObjectContainer::ClearKilledObjects()
 {
 	for (unsigned to_delete = 0; to_delete < _objects->to_kill.top; to_delete++) {
 		int delete_id = _objects->to_kill.obj_id[to_delete];
 		if (delete_id == -1)
 			continue;
-		for (int i = 0; i < LAYERS_COUNT; i++) //стираем объект со всех слоёв
+		for (int i = 0; i < _objects->LAYERS_COUNT; i++) //стираем объект со всех слоёв
 			if (_objects->obj[delete_id].layer_pos[i] != -1) {
 				if (_objects->obj[delete_id].layer_pos[i] == _objects->layers[i].top - 1) {
 					_objects->layers[i].top--;
@@ -107,18 +87,18 @@ void GameField::ClearKilledObjects()
 		_objects->top--;
 		if (delete_id == _objects->top) {
 			_objects->obj[delete_id].obj = nullptr;
-			for (int i = 0; i < LAYERS_COUNT; i++)
+			for (int i = 0; i < _objects->LAYERS_COUNT; i++)
 				_objects->obj[delete_id].layer_pos[i] = -1;
 		}
 		else {
 			unsigned moved_id = _objects->top;
 			_objects->obj[delete_id] = _objects->obj[moved_id];
 			_objects->obj[delete_id].obj->SetID(delete_id);
-			for (int i = 0; i < LAYERS_COUNT; i++)
+			for (int i = 0; i < _objects->LAYERS_COUNT; i++)
 				if (_objects->obj[moved_id].layer_pos[i] != -1)
 					_objects->layers[i].obj_id[_objects->obj[moved_id].layer_pos[i]] = delete_id;
 			_objects->obj[moved_id].obj = nullptr;
-			for (int i = 0; i < LAYERS_COUNT; i++)
+			for (int i = 0; i < _objects->LAYERS_COUNT; i++)
 				_objects->obj[moved_id].layer_pos[i] = -1;
 			for (unsigned i = to_delete + 1; i < _objects->to_kill.top; i++) {
 				if (_objects->to_kill.obj_id[i] == moved_id)
@@ -133,4 +113,18 @@ void GameField::ClearKilledObjects()
 		_objects->to_kill.obj_id[i] = -1;
 	_objects->to_kill.top = 0;
 
+}
+
+void ObjectContainer::ApplyToAllObjects(void(*func)(GameObject*))
+{
+	for (unsigned i = 0; i < _objects->top; i++)
+		func(_objects->obj[i].obj);
+}
+void ObjectContainer::ApplyToLayerObjects(void(*func)(GameObject*), unsigned layer_id)
+{
+	if (layer_id >= _objects->LAYERS_COUNT)
+		return;
+
+	for (unsigned i = 0; i < _objects->layers[layer_id].top; i++)
+		func(_objects->obj[_objects->layers[layer_id].obj_id[i]].obj);
 }

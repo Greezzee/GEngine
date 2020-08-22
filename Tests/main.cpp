@@ -1,4 +1,4 @@
-//#include <vld.h>
+#include <vld.h>
 
 #include "../Engine/AllEngine.h"
 class TestScene : public Scene
@@ -140,7 +140,7 @@ private:
 	int text;
 };
 
-class TestObj : public GameObject
+class TestObj1 : public GameObject
 {
 public:
 	void Update() override
@@ -160,22 +160,45 @@ public:
 
 	GameObject* Clone() const override
 	{
-		return new TestObj;
+		return new TestObj1;
 	}
 };
-
+void test(GameObject* t) {
+	if (t != nullptr) {
+		Vector2F a = t->GetPos();
+		printf("Hi, I'm object at pos (%g; %g)!\n", a.x, a.y);
+	}
+	else
+		printf("But nobody came\n");
+}
 class GameplayScene : public Scene
 {
 	void Init() override
 	{
-		field.Init();
-		GameobjectSpawnData new_obj;
-		new_obj.obj = new TestObj;
-		field.SpawnObject(new_obj);
+		field.Init(50, 2);
+		GameobjectSpawnData new_obj1, new_obj2, new_obj3;
+		new_obj1.obj = new TestObj1;
+		new_obj1.obj->SetPos(Vector2F(1, 1));
+		new_obj1.is_on_layer = { false, true };
+		new_obj2.obj = new TestObj1;
+		new_obj2.obj->SetPos(Vector2F(2, 2));
+		new_obj2.is_on_layer = { true, false };
+		new_obj3.obj = new TestObj1;
+		new_obj3.obj->SetPos(Vector2F(3, 3));
+		new_obj3.is_on_layer = { true, true };
+		field.SpawnObject(new_obj1);
+		field.SpawnObject(new_obj2);
+		field.SpawnObject(new_obj3);
+		field.ApplyToLayerObjects(test, 5);
+		field.KillObject(new_obj3.obj);
+		field.ApplyToLayerObjects(test, 15);
+		field.ClearKilledObjects();
+		field.ApplyToLayerObjects(test, 48);
 	}
 	void Update() override
 	{
-		field.Update();
+		SceneManager::CloseScene(this);
+		//field.ApplyToAllObjects(test);
 	}
 
 	void Destroy() override
@@ -183,13 +206,15 @@ class GameplayScene : public Scene
 		field.Destroy();
 	}
 
-	GameField field;
+	ObjectContainer field;
+private:
+	
 };
 
 int main()
 {
 	GameManager::Init();
-	Scene* start = new TestScene;
+	Scene* start = new GameplayScene;
 	start->Init();
 	GameManager::Launch(start);
 	return 0;

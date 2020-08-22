@@ -26,14 +26,15 @@
 * Остальное НЕ ТРОГАТЬ
 */
 
-class GameField
+class ObjectContainer
 {
 public:
 	//! Инициализация пустого поля (без объектов).
 	void Init();
 
-	//! Обновление всего поля. Вызывается каждый кадр
-	void Update();
+	//! Инициализация пустого поля (без объектов) с заданным числом
+	//! макс. кол-ва объектов и слоёв
+	void Init(unsigned max_obj, unsigned layers_count);
 
 	//! Уничтожение игрового поля и очистка всей памяти
 	void Destroy();
@@ -48,18 +49,9 @@ public:
 
 	/*!
 	* Уничтожение объекта. Автоматически очищает память и вызывает Destroy по окончанию кадра.
-	* Принимает указатель на объект, имеет сложность O(n), где n - кол-во объектов
+	* Принимает указатель на объект, работает очень быстро
 	*/
 	void KillObject(const GameObject* object);
-
-	/*!
-	* Уничтожение объекта. Автоматически очищает память и вызывает Destroy по окончанию кадра.
-	* Принимает динамический ID объекта (можно получить с помощью GetID), имеет сложность O(1)
-	*/
-	void KillObject(const unsigned ID);
-
-	virtual ~GameField() {};
-private:
 
 	/*!
 	* Вызывается после каждого кадра. Окончательно удаляет все объекты.
@@ -67,6 +59,19 @@ private:
 	* среди них будут существовать удалённые
 	*/
 	void ClearKilledObjects();
+
+	void ApplyToAllObjects(void (*func)(GameObject*));
+	void ApplyToLayerObjects(void(*func)(GameObject*), unsigned layer_id);
+
+	virtual ~ObjectContainer() {};
+private:
+
+	/*!
+	* Уничтожение объекта. Автоматически очищает память и вызывает Destroy по окончанию кадра.
+	* Принимает динамический ID объекта (можно получить с помощью GetID), имеет сложность O(1)
+	*/
+	void KillObject(const unsigned ID);
+
 	tge::ObjectsArray* _objects = nullptr;//! список всех объектов. Подробнее в одноименном файле
 };
 

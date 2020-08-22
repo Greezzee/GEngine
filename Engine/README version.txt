@@ -1,4 +1,4 @@
-GEngine 0.2pre no docs
+GEngine 0.2.2pre no docs
 ОТСУТСТВУЕТ ДОКУМЕНТАЦИЯ
 
 версия от 12.8.20

@@ -4,17 +4,17 @@ void GameObject::SetID(unsigned new_id)
 	_ID = new_id;
 }
 
-unsigned GameObject::GetID()
+unsigned GameObject::GetID() const
 {
 	return _ID;
 }
 
-void GameObject::SetGamefield(GameField* field)
+void GameObject::SetGamefield(ObjectContainer* field)
 {
 	gamefield = field;
 }
 
-GameField* GameObject::GetGamefield()
+ObjectContainer* GameObject::GetGamefield()
 {
 	return gamefield;
 }

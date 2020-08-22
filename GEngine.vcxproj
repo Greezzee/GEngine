@@ -112,8 +112,9 @@
     <ClCompile Include="engine\control\InputManager.cpp" />
     <ClCompile Include="Engine\Debugger\Debugger.cpp" />
     <ClCompile Include="engine\gamemanagment\GameManager.cpp" />
-    <ClCompile Include="engine\gameplay\GameField.cpp" />
+    <ClCompile Include="engine\gameplay\ObjectContainer.cpp" />
     <ClCompile Include="engine\gameplay\GameObject.cpp" />
+    <ClCompile Include="Engine\Gameplay\ObjectsArray.cpp" />
     <ClCompile Include="engine\graphics\DrawData.cpp" />
     <ClCompile Include="Engine\Graphics\FPSCounter.cpp" />
     <ClCompile Include="engine\graphics\GraphicManager.cpp" />
@@ -140,7 +141,7 @@
     <ClInclude Include="engine\control\InputManager.h" />
     <ClInclude Include="Engine\Debugger\Debugger.h" />
     <ClInclude Include="engine\gamemanagment\GameManager.h" />
-    <ClInclude Include="engine\gameplay\GameField.h" />
+    <ClInclude Include="engine\gameplay\ObjectContainer.h" />
     <ClInclude Include="engine\gameplay\GameObject.h" />
     <ClInclude Include="engine\gameplay\ObjectsArray.h" />
     <ClInclude Include="engine\graphics\DrawData.h" />
