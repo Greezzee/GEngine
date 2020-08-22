@@ -115,16 +115,16 @@ void ObjectContainer::ClearKilledObjects()
 
 }
 
-void ObjectContainer::ApplyToAllObjects(void(*func)(GameObject*))
+void ObjectContainer::ApplyToAllObjects(void(*func)(GameObject*, void*), void* data)
 {
 	for (unsigned i = 0; i < _objects->top; i++)
-		func(_objects->obj[i].obj);
+		func(_objects->obj[i].obj, data);
 }
-void ObjectContainer::ApplyToLayerObjects(void(*func)(GameObject*), unsigned layer_id)
+void ObjectContainer::ApplyToLayerObjects(unsigned layer_id, void(*func)(GameObject*, void*), void* data)
 {
 	if (layer_id >= _objects->LAYERS_COUNT)
 		return;
 
 	for (unsigned i = 0; i < _objects->layers[layer_id].top; i++)
-		func(_objects->obj[_objects->layers[layer_id].obj_id[i]].obj);
+		func(_objects->obj[_objects->layers[layer_id].obj_id[i]].obj, data);
 }

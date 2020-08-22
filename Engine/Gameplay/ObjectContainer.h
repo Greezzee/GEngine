@@ -60,8 +60,8 @@ public:
 	*/
 	void ClearKilledObjects();
 
-	void ApplyToAllObjects(void (*func)(GameObject*));
-	void ApplyToLayerObjects(void(*func)(GameObject*), unsigned layer_id);
+	void ApplyToAllObjects(void (*func)(GameObject*, void*), void* data = nullptr);
+	void ApplyToLayerObjects(unsigned layer_id, void(*func)(GameObject*, void*), void* data = nullptr);
 
 	virtual ~ObjectContainer() {};
 private:
