@@ -393,6 +393,7 @@ bool Collider::IsCollide(UniversalCollider* a, PolygonCollider* b)
 {
 	SquareCollider* x;
 	PolygonCollider* y;
+	PolygonCollider temp;
 	switch (a->_type)
 	{
 	case tge::ColliderType::ERROR_COLLIDER:
@@ -404,7 +405,8 @@ bool Collider::IsCollide(UniversalCollider* a, PolygonCollider* b)
 			printf("[ERROR]: Incorrect collider\n");
 			return false;
 		}
-		return IsCollide(&PolygonCollider(*x), b);
+		temp.Init(*x);
+		return IsCollide(&temp, b);
 	case tge::ColliderType::ELLIPSE_COLLIDER:
 		printf("[ERROR]: Ellipse and polygon can't collide\n");
 		return false;
@@ -430,6 +432,7 @@ bool Collider::IsCollide(UniversalCollider* a, SquareCollider* b)
 	SquareCollider* x;
 	PolygonCollider* y;
 	CircleCollider* z;
+	PolygonCollider temp;
 	switch (a->_type)
 	{
 	case tge::ColliderType::ERROR_COLLIDER:
@@ -451,7 +454,8 @@ bool Collider::IsCollide(UniversalCollider* a, SquareCollider* b)
 			printf("[ERROR]: Incorrect collider\n");
 			return false;
 		}
-		return IsCollide(y, &PolygonCollider(*b));
+		temp.Init(*b);
+		return IsCollide(y, &temp);
 	case tge::ColliderType::CIRCLE_COLLIDER:
 		z = dynamic_cast<CircleCollider*>(a);
 		if (!z) {
