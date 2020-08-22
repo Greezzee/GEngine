@@ -66,4 +66,6 @@ private:
 	static sf::Glsl::Vec4 global_light_color;
 
 	friend class ShaderManager;
+
+	static bool is_change;
 };

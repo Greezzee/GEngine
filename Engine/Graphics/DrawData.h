@@ -88,16 +88,22 @@ struct DrawData
 
 namespace tge
 {
+	struct Text
+	{
+		sf::Text text;
+		Shader* shader = nullptr;
+	};
 
 	struct Sprite
 	{
 		sf::Sprite sprite;
-		Shader* shader;
+		Shader* shader = nullptr;
 	};
 
 	struct GraphicLayer
 	{
 		std::vector<tge::Sprite> layer_sprites;
+		std::vector<tge::Text> layer_text;
 		Shader* layer_shader = nullptr;
 		sf::RenderTexture* buffer = nullptr;
 	};

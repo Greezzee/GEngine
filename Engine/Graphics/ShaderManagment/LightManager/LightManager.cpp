@@ -9,17 +9,19 @@ float LightManager::softness[source_max_count];
 float LightManager::pixel_size;
 unsigned LightManager::view_id;
 sf::Glsl::Vec4 LightManager::global_light_color;
-
+bool LightManager::is_change;
 void LightManager::Init()
 {
 	source_count = 0;
 	view_id = 0;
 	pixel_size = 1;
 	global_light_color = { 0, 0, 0, 0 };
+	is_change = true;
 }
 
 int LightManager::AddLightSource(const LightData& data)
 {
+	is_change = true;
 	if (source_count + 1 >= source_max_count)
 		return -1;
 
@@ -36,6 +38,7 @@ int LightManager::AddLightSource(const LightData& data)
 }
 bool LightManager::SetLightSource(unsigned ID, const LightData& data)
 {
+	is_change = true;
 	if (ID >= source_count)
 		return false;
 
@@ -52,11 +55,13 @@ bool LightManager::SetLightSource(unsigned ID, const LightData& data)
 
 void LightManager::ClearLightSource()
 {
+	is_change = true;
 	source_count = 0;
 }
 
 void LightManager::SetPixelSize(float ps)
 {
+	is_change = true;
 	pixel_size = ps;
 }
 
@@ -68,23 +73,30 @@ void LightManager::SetView(unsigned id)
 
 void LightManager::ApplyLight(sf::Shader* shader)
 {
-	shader->setUniform("global_light_color", global_light_color);
-	shader->setUniform("source_count", (int)source_count);
-	shader->setUniformArray("pos", pos, source_max_count);
-	shader->setUniformArray("light_color", light_color, source_max_count);
-	shader->setUniformArray("full_light_dist", full_light_dist, source_max_count);
-	shader->setUniformArray("any_light_dist", any_light_dist, source_max_count);
-	shader->setUniformArray("softness", softness, source_max_count);
+	if (is_change) {
+		shader->setUniform("global_light_color", global_light_color);
+		shader->setUniform("source_count", (int)source_count);
+		shader->setUniformArray("pos", pos, source_max_count);
+		shader->setUniformArray("light_color", light_color, source_max_count);
+		shader->setUniformArray("full_light_dist", full_light_dist, source_max_count);
+		shader->setUniformArray("any_light_dist", any_light_dist, source_max_count);
+		shader->setUniformArray("softness", softness, source_max_count);
+	}
+	is_change = false;
 }
 
 void LightManager::ApplyPixelLight(sf::Shader* shader)
 {
-	ApplyLight(shader);
-	shader->setUniform("pixel_size", GraphicManager::ConvertViewSizeToReal(pixel_size, view_id));
+	if (is_change) {
+		ApplyLight(shader);
+		shader->setUniform("pixel_size", GraphicManager::ConvertViewSizeToReal(pixel_size, view_id));
+	}
+	is_change = false;
 }
 
 void LightManager::SetGlobalLight(const Color& glc)
 {
+	is_change = true;
 	global_light_color.x = glc.r / 255.f;
 	global_light_color.y = glc.g / 255.f;
 	global_light_color.z = glc.b / 255.f;

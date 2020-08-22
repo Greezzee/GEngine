@@ -215,7 +215,7 @@ private:
 int main()
 {
 	GameManager::Init();
-	Scene* start = new GameplayScene;
+	Scene* start = new TestScene;
 	start->Init();
 	GameManager::Launch(start);
 	return 0;
