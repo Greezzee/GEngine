@@ -7,9 +7,11 @@ public:
 	void Init() override 
 	{
 		std::vector<Vector2F> p = { {-70, -70}, {100, -100}, {60, -20}, {0, 100}, {-50, 150} };
-		a.Init(Vector2F(100, 100), p);
-		b.Init(Vector2F(400, 400), 150 * Vector2F(1, 1));
-		c.Init(Vector2F(680, 500), 75 * Vector2F(1, 1));
+		//a.Init(Vector2F(100, 100), p);
+		//b.Init(Vector2F(400, 400), 150 * Vector2F(1, 1));
+		//c.Init(Vector2F(680, 500), 75 * Vector2F(1, 1));
+		a.Init(Vector2F(100, 100), 0, Vector2F(100, 50));
+		b.Init(Vector2F(400, 400), PI / 4, Vector2F(200, 50));
 		InputManager::LinkToCode(KeyboardKey::W, 0);
 		InputManager::LinkToCode(KeyboardKey::A, 1);
 		InputManager::LinkToCode(KeyboardKey::S, 2);
@@ -81,13 +83,13 @@ public:
 
 		a.SetPos(a.GetPos() + speed * 200 * TimeManager::GetDeltaTimeF());
 		a.SetAngle(a.GetAngle() + rot * TimeManager::GetDeltaTimeF());
-		Debugger::DrawCollider(a, 10, 4);
-		Debugger::DrawCollider(b, 10, 4);
+		Debugger::DrawCollider(a);
+		Debugger::DrawCollider(b);
 		//Debugger::DrawLine(a.GetPos() + Vector2F(0, a.GetRadius()) - Vector2F(1000, 0), a.GetPos() + Vector2F(0, a.GetRadius()) + Vector2F(1000, 0), 1, 1, Color::Green());
 		//Debugger::DrawLine(a.GetPos() - Vector2F(0, a.GetRadius()) - Vector2F(1000, 0), a.GetPos() - Vector2F(0, a.GetRadius()) + Vector2F(1000, 0), 1, 1, Color::Green());
 
 
-		float dist = Collider::DistanceBetween(&a, &PolygonCollider(b), { 1, 0 });
+		//float dist = Collider::DistanceBetween(&a, &PolygonCollider(b), { 1, 0 });
 		//printf("%g\n", dist);
 		if (Collider::IsCollide((UniversalCollider*)(&a), (UniversalCollider*)(&b))) {
 			Debugger::DrawLine(a.GetPos(), b.GetPos(), 4, 0, Color::Red());
@@ -132,8 +134,8 @@ public:
 		printf("Close!\n");
 	}
 private:
-	PolygonCollider a;
-	SquareCollider b, c;
+	EllipseCollider a;
+	EllipseCollider b, c;
 	PixelLightShader x;
 	int text;
 };
