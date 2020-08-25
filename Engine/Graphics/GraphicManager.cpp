@@ -94,10 +94,13 @@ bool GraphicManager::Update()
 	}
 
 	window.clear();
+	
 	for (unsigned i = 0; i < LAYER_COUNT; i++) {
 		to_draw[i].buffer->clear(sf::Color(0, 0, 0, 0));
-		for (auto obj = to_draw[i].layer_sprites.begin(); obj != to_draw[i].layer_sprites.end(); obj++) {
-			obj->shader ? to_draw[i].buffer->draw((*obj).sprite, ShaderManager::GetShader((*obj).shader)) : to_draw[i].buffer->draw((*obj).sprite);
+
+		for (unsigned j = 0; j < GetSpritesCount(); j++) {
+			to_draw[i].buffer->draw(sprites[j].t[i], &sprites[j].texture);
+			sprites[j].t[i].resize(0);
 		}
 		to_draw[i].layer_sprites.clear();
 		to_draw[i].buffer->display();
@@ -126,7 +129,7 @@ void GraphicManager::Exit()
 	ShaderManager::Destroy();
 }
 
-bool GraphicManager::Draw(DrawData& data, unsigned view_id)
+bool GraphicManager::Draw(DrawData data, unsigned view_id)
 {
 	if (data.spriteID >= _sprites_count || view_id >= views.size())
 		return false;
@@ -140,13 +143,33 @@ bool GraphicManager::Draw(DrawData& data, unsigned view_id)
 
 	GraphicPrefab& spr = sprites[data.spriteID];
 
-	spr.sprite.setPosition(sf::Vector2f(data.position.x, data.position.y));
-	spr.sprite.setRotation(data.rotation);
-	spr.sprite.setColor(sf::Color(data.color.r, data.color.g, data.color.b, data.color.a));
-	spr.sprite.setOrigin(sf::Vector2f(data.origin.x * spr.size.x, data.origin.y * spr.size.y));
-	spr.sprite.setScale(sf::Vector2f(data.size.x / spr.size.x, data.size.y / spr.size.y));
-	spr.sprite.setTextureRect(sf::IntRect((int)spr.size.x * (data.frame % spr.frames_count), 0, (int)spr.size.x, (int)spr.size.y));
-	to_draw[data.layer].layer_sprites.push_back({ sprites[data.spriteID].sprite, data.shader });
+	
+	unsigned a = spr.t[data.layer].getVertexCount();
+	spr.t[data.layer].resize(a + 4);
+
+	float ca = cosf(data.rotation / 180.f * PI);
+	float sa = sinf(data.rotation / 180.f * PI);
+	float x, old_x, y;
+	old_x = x = -data.size.x * data.origin.x;
+	y = -data.size.y * data.origin.y;
+	spr.t[data.layer][a].position = sf::Vector2f(data.position.x + ca * x + sa * y, data.position.y - sa * x + ca * y);
+
+	x = data.size.x * (1 - data.origin.x);
+	spr.t[data.layer][a + 1].position = sf::Vector2f(data.position.x + ca * x + sa * y, data.position.y - sa * x + ca * y);
+
+	y = data.size.y * (1 - data.origin.y);
+	spr.t[data.layer][a + 2].position = sf::Vector2f(data.position.x + ca * x + sa * y, data.position.y - sa * x + ca * y);
+
+	x = old_x;
+	spr.t[data.layer][a + 3].position = sf::Vector2f(data.position.x + ca * x + sa * y, data.position.y - sa * x + ca * y);
+
+	float tex_x = spr.size.x * (data.frame % spr.frames_count);
+
+	spr.t[data.layer][a].texCoords = sf::Vector2f(tex_x, 0);
+	spr.t[data.layer][a + 1].texCoords = sf::Vector2f(tex_x + spr.size.x, 0);
+	spr.t[data.layer][a + 2].texCoords = sf::Vector2f(tex_x + spr.size.x, spr.size.y);
+	spr.t[data.layer][a + 3].texCoords = sf::Vector2f(tex_x, spr.size.y);
+
 	return true;
 }
 
@@ -200,6 +223,8 @@ bool GraphicManager::SetSpritesMaxCount(unsigned count)
 	sprites.resize(count);
 	if (_sprites_count > count)
 		_sprites_count = count;
+	for (unsigned i = 0; i < LAYER_COUNT; i++)
+		sprites[i].t.resize(count);
 	return true;
 }
 
@@ -210,10 +235,10 @@ int GraphicManager::LoadSprite(GraphicPrefabData data)
 	bool text_success = sprites[_sprites_count].texture.loadFromFile(data.file);
 	if (!text_success)
 		return -1;
-	sprites[_sprites_count].sprite.setTexture(sprites[_sprites_count].texture);
 	sprites[_sprites_count].size = data.size;
-	sprites[_sprites_count].sprite.setTextureRect(sf::IntRect(0, 0, (int)data.size.x, (int)data.size.y));
 	sprites[_sprites_count].frames_count = data.frames_count;
+	for (unsigned i = 0; i < LAYER_COUNT; i++)
+		sprites[_sprites_count].t[i].setPrimitiveType(sf::Quads);
 	_sprites_count++;
 	return _sprites_count - 1;
 }
@@ -225,10 +250,10 @@ bool GraphicManager::LoadSprite(GraphicPrefabData& data, unsigned id)
 	bool text_success = sprites[id].texture.loadFromFile(data.file);
 	if (!text_success)
 		return false;
-	sprites[id].sprite.setTexture(sprites[id].texture);
 	sprites[id].size = data.size;
-	sprites[_sprites_count].sprite.setTextureRect(sf::IntRect(0, 0, (int)data.size.x, (int)data.size.y));
-	sprites[_sprites_count].frames_count = data.frames_count;
+	sprites[id].frames_count = data.frames_count;
+	for (unsigned i = 0; i < LAYER_COUNT; i++)
+		sprites[id].t[i].setPrimitiveType(sf::Quads);
 	return true;
 }
 
@@ -298,4 +323,6 @@ void GraphicManager::SetLayersCount(unsigned count)
 		LAYER_COUNT = count;
 		to_draw.resize(LAYER_COUNT);
 	}
+	for (unsigned i = 0; i < GetSpritesMaxCount(); i++)
+		sprites[i].t.resize(LAYER_COUNT);
 }

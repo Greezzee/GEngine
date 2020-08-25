@@ -13,9 +13,9 @@ namespace tge {
 	//! Структура для хранения информации об изображениях и анимации, используемый ТОЛЬКО в GraphicManager
 	struct GraphicPrefab {
 		sf::Texture texture; //! sfml текстура префаба
-		sf::Sprite sprite; //! sfml спрайт для отрисовки
 		Vector2F size; //! размер спрайта в пикселях
 		unsigned frames_count = 1; //! Кол-во спрайтов в анимации. Для одиночного изображения 1
+		std::vector<sf::VertexArray> t;
 	};
 
 	enum BasicShapes {
@@ -67,7 +67,7 @@ public:
 	//static void LoadPack();
 	//! Нарисовать спрайт согласно DrawData, применив к нему View и view_id. data при этом необратимо портится!!!
 	//! Вернёт true, если нарисовано успешно, false если нет (id спрайта больше чем число загруженных спрайтов)
-	static bool Draw(DrawData& data, unsigned view_id = 0);
+	static bool Draw(DrawData data, unsigned view_id = 0);
 
 	//! Применяет к data соответствующий View. При этом data изменяется!
 	static void SetView(DrawData& data, unsigned view_id);
