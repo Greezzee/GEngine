@@ -9,29 +9,6 @@
 #include "../Debugger/Debugger.h"
 #include "FPSCounter.h"
 
-namespace tge {
-	//! Структура для хранения информации об изображениях и анимации, используемый ТОЛЬКО в GraphicManager
-	struct GraphicPrefab {
-		sf::Texture texture; //! sfml текстура префаба
-		Vector2F size; //! размер спрайта в пикселях
-		unsigned frames_count = 1; //! Кол-во спрайтов в анимации. Для одиночного изображения 1
-		std::vector<sf::VertexArray> t;
-	};
-
-	enum BasicShapes {
-		Square, Circle
-	};
-}
-
-//! Структура для загрузки новых изображеней в GraphicManager
-struct GraphicPrefabData {
-	GraphicPrefabData(std::string f, Vector2F s, unsigned fc) :
-		file(f), size(s), frames_count(fc) {}
-	std::string file; //! файл, при необходимости путь к нему
-	Vector2F size; //! размер спрайта в пикселях
-	unsigned frames_count = 1; //! Кол-во спрайтов в анимации. Для одиночного изображения 1
-};
-
 /*!
 * Статичный класс, предназначенный для работы с графикой.
 *
@@ -72,33 +49,29 @@ public:
 	//! Применяет к data соответствующий View. При этом data изменяется!
 	static void SetView(DrawData& data, unsigned view_id);
 
-	//! Устанавливает максимальное количество одновременно загруженных спрайтов
-	//! Вернёт true при успешном расширении, false иначе (например, если число меньше
-	//! кол-ва спрайтов, загруженных движком по умолчанию)
-	static bool SetSpritesMaxCount(unsigned count);
-
-	//! Получить максимальное количество одновременно загруженных спрайтов
-	static unsigned GetSpritesMaxCount();
-
 	//! Получить количество загруженных спрайтов на данных момент
 	static unsigned GetSpritesCount();
 
 	//! Освобождает место для спрайтов, сохраняя их максимально возможное количество (не гарантирует мгновенного освобождения памяти) 
 	static void ClearSprites();
 
-	/*!
-	* Загружает спрайт по заданному пути и помещает его на следующий свободный id
-	* Вернёт id нового спрайта при успешной загрузке, вернёт -1 в другом случае (нет свободных id, не найден файл по пути)
-	*/
-	static int LoadSprite(GraphicPrefabData data);
+	//! Получить количество загруженных текстур на данных момент
+	static unsigned GetTexturesCount();
+
+	//! Освобождает место для текстур, сохраняя их максимально возможное количество (не гарантирует мгновенного освобождения памяти) 
+	static void ClearTextures();
 
 	/*!
-	* Загружает спрайт по заданному пути и помещает его на заданный id.
-	* Спрайт, который находился ранее по этому id перезаписывается
-	* Вернёт true при успешной загрузке, иначе вернёт false (данный id больше максимальное возможного, не найден файл по пути)
-	* id <= GetSpritesMaxCount() ВСЕГДА
+	* Загружает текстуру по пути path помещает её на следующий свободный id
+	* Вернёт id новой текстуры при успешной загрузке, вернёт -1 в другом случае (нет свободных id, не найден файл по пути)
 	*/
-	static bool LoadSprite(GraphicPrefabData& data, unsigned id);
+	static int LoadTexture(const std::string& path);
+
+	/*!
+	* Загружает спрайт согласно data и помещает его на следующий свободный id
+	* Вернёт id нового спрайта при успешной загрузке, вернёт -1 в другом случае (нет свободных id, не найден файл по пути)
+	*/
+	static int LoadSprite(const GraphicPrefabData& data);
 
 	/*!
 	* Возвращает указатель на view, имеющий данное ID.
@@ -162,19 +135,19 @@ public:
 private:
 	static sf::RenderWindow window; //! Окно SFML, на котором происходит вся отрисовка
 
-	static std::vector<tge::GraphicPrefab> sprites; //! Массив всех спрайтов игры
+	static std::vector<tge::TextureVertex> textures; //! Массив всех текстур игры
+	static std::vector<tge::Sprite> sprites; //! Массив всех спрайтов игры
 
-	static std::vector<tge::GraphicLayer> to_draw; //! Массив всех спрайтов, которые нужно нарисовать в данный кадр
+	static std::vector<tge::GraphicLayer> layers_to_draw; //! Массив всех слоёв, которые нужно нарисовать в данный кадр
 
 	static std::vector<View> views; //! Массив всех Views.
 
 	static unsigned LAYER_COUNT; //! Число всех слоёв отрисовки. НЕ ПУТАТЬ СО СЛОЯМИ ОБЪЕКТОВ. Отвечает за то, какие спрайты перекроет данный спрайт, а какие нет
 
-	static unsigned _sprites_count;
+	static unsigned _engine_textures_count; //! Кол-во текстур, встроенных в движок
+	static unsigned _engine_sprites_count; //! Кол-во спрайтов, встроенных в движок
 
 	static std::vector<int> _basic_shapes;
-
-	static unsigned _engine_sprites_count;
 
 	static tge::FPSCounter _fps_counter;
 

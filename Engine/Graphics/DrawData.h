@@ -88,23 +88,56 @@ struct DrawData
 
 namespace tge
 {
-	struct Text
-	{
-		sf::Text text;
-		Shader* shader = nullptr;
-	};
-
-	struct Sprite
-	{
-		sf::Sprite sprite;
-		Shader* shader = nullptr;
-	};
-
 	struct GraphicLayer
 	{
-		std::vector<tge::Sprite> layer_sprites;
-		std::vector<tge::Text> layer_text;
 		Shader* layer_shader = nullptr;
 		sf::RenderTexture* buffer = nullptr;
 	};
 }
+
+namespace tge {
+	//! Структура для хранения информации об изображениях и анимации, используемый ТОЛЬКО в GraphicManager
+	struct TextureVertex {
+		sf::Texture texture; //! sfml текстура префаба
+		std::vector<sf::VertexArray> layer_vertex; //! массив вертексов, каждый элемент отвечает за нужный слой
+	};
+
+	struct Sprite
+	{
+		unsigned texture_id; //! положение файла текстуры в массиве из TextureVertex
+		Vector2F size; //! Размер одиночного изображения в пикселях
+		Vector2F sprite_pos; //! Положение верхнего левого угла изображения, с которой берёт начало спрайт
+		unsigned frames_count = 1; //! Общее кол-во всех спрайтов в анимации. Анимация строго слева направо от sprite_pos без пустот между спрайтами
+	};
+
+	enum BasicShapes {
+		Square, Circle
+	};
+}
+
+//! Структура для загрузки новых изображеней в GraphicManager
+class GraphicPrefabData {
+public:
+	GraphicPrefabData(std::string f, Vector2F s) :
+		file(f), size(s), frames_count(1), sprite_pos(Vector2F(0, 0)), texture_id(-1) {}
+	GraphicPrefabData(std::string f, Vector2F s, unsigned fc) :
+		file(f), size(s), frames_count(fc), sprite_pos(Vector2F(0, 0)), texture_id(-1) {}
+	GraphicPrefabData(std::string f, Vector2F s, unsigned fc, Vector2F spr_pos) :
+		file(f), size(s), frames_count(fc), sprite_pos(spr_pos), texture_id(-1) {}
+	GraphicPrefabData(unsigned textureID, Vector2F s) :
+		file(""), size(s), frames_count(1), sprite_pos(Vector2F(0, 0)), texture_id(textureID) {}
+	GraphicPrefabData(unsigned textureID, Vector2F s, unsigned fc) :
+		file(""), size(s), frames_count(fc), sprite_pos(Vector2F(0, 0)), texture_id(textureID) {}
+	GraphicPrefabData(unsigned textureID, Vector2F s, unsigned fc, Vector2F spr_pos) :
+		file(""), size(s), frames_count(fc), sprite_pos(spr_pos), texture_id(textureID) {}
+
+private:
+
+	std::string file; //! файл, при необходимости путь к нему
+	Vector2F size; //! размер спрайта в пикселях
+	Vector2F sprite_pos; //! Положение верхнего левого угла спрайта
+	int texture_id; //! id текстуры. -1, если её следует загрузить из файла по пути file
+	unsigned frames_count = 1; //! Кол-во спрайтов в анимации. Для одиночного изображения 1
+
+	friend class GraphicManager;
+};

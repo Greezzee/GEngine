@@ -1,4 +1,4 @@
-//#include <vld.h>
+#include <vld.h>
 #include <iostream>
 #include "../Engine/AllEngine.h"
 class TestScene : public Scene
@@ -32,8 +32,13 @@ public:
 		v.virtual_size = { 1280, 720 };
 		v.virtual_position = { 0, 0 };
 		//GraphicManager::AddView(v);
-		text = GraphicManager::LoadSprite(GraphicPrefabData("Tests/player.png", Vector2F(64, 64), 1));
-		GraphicManager::AddView({ {680, 360}, {680, 360}, {0.5, 0.5}, {0, 0}, {1280, 720}, {0, 0}, {1, -1} });
+		int text_id = GraphicManager::LoadTexture("Tests/player.png");
+		text = GraphicManager::LoadSprite(GraphicPrefabData(text_id, Vector2F(32, 32), 3, Vector2F(0, 32)));
+		GraphicManager::AddView({ {640, 360}, {1280, 720}, {0.5, 0.5}, {0, 0}, {1280, 720}, {0, 0}, {1, -1} });
+
+		GraphicManager::ClearSprites();
+		//GraphicManager::ClearTextures();
+		text = GraphicManager::LoadSprite(GraphicPrefabData(text_id, Vector2F(32, 32), 2, Vector2F(32, 0)));
 
 		LightManager::SetView(1);
 
@@ -87,8 +92,8 @@ public:
 
 		a.SetPos(a.GetPos() + speed * 200 * TimeManager::GetDeltaTimeF());
 		a.SetAngle(a.GetAngle() + rot * TimeManager::GetDeltaTimeF());
-		//Debugger::DrawCollider(a);
-		//Debugger::DrawCollider(b);
+		Debugger::DrawCollider(a, 1);
+		Debugger::DrawCollider(b, 1);
 		//Debugger::DrawLine(a.GetPos() + Vector2F(0, a.GetRadius()) - Vector2F(1000, 0), a.GetPos() + Vector2F(0, a.GetRadius()) + Vector2F(1000, 0), 1, 1, Color::Green());
 		//Debugger::DrawLine(a.GetPos() - Vector2F(0, a.GetRadius()) - Vector2F(1000, 0), a.GetPos() - Vector2F(0, a.GetRadius()) + Vector2F(1000, 0), 1, 1, Color::Green());
 
@@ -98,10 +103,10 @@ public:
 		if (Collider::IsCollide((UniversalCollider*)(&a), (UniversalCollider*)(&b))) {
 			//Debugger::DrawLine(a.GetPos(), b.GetPos(), 4, 0, Color::Red());
 		}
-		//for (int i = 0; i < 1280; i += 100)
-			//Debugger::DrawLine({ (float)i, 0 }, { (float)i, 720 }, 2);
-		//for (int i = 0; i < 720; i += 100)
-			//Debugger::DrawLine({ 0, (float)i }, {1280, (float)i }, 2);
+		for (int i = 0; i < 1280; i += 100)
+			Debugger::DrawLine({ (float)i, 0 }, { (float)i, 720 }, 2, 1);
+		for (int i = 0; i < 720; i += 100)
+			Debugger::DrawLine({ 0, (float)i }, {1280, (float)i }, 2, 1);
 		
 		if (InputManager::IsPressed(KeyboardKey::ESC))
 			SceneManager::CloseScene(this);
@@ -112,28 +117,29 @@ public:
 
 		
 		DrawData player;
-		player.frame = 0;
 		player.color = Color::White();
 		player.layer = 12;
 		player.origin = { 0.5, 0.5 };
 		player.rotation = a.GetAngle() * 180 / PI;
 		player.size = { 200, 200 };
 		player.spriteID = text;
+		player.frame = (int)((float)TimeManager::GetTimeFromLastRestart() / 1000000.f * 4);
 		player.shader = nullptr;
 		
-		for (unsigned i = 0; i < 100; i++)
-			for (unsigned j = 0; j < 100; j++)
+		for (unsigned i = 0; i < 100; i+= 19)
+			for (unsigned j = 0; j < 100; j+= 19)
 			{
+				player.frame++;
 				player.position = { 12 * (float)i, 9 * (float)j };
-				GraphicManager::Draw(player, 1);
+				//GraphicManager::Draw(player, 1);
 				//GraphicManager::Draw(player);
 			}
 		
 
-		//Debugger::DrawLine({ 0, 0 }, { 1280, 0 }, 10);
-		//Debugger::DrawLine({ 0, 720 }, { 1280, 720 }, 10);
-		//Debugger::DrawLine({ 1280, 720 }, { 1280, 0 }, 10);
-		//Debugger::DrawLine({ 0, 0 }, { 0, 720 }, 10);
+		Debugger::DrawLine({ 0, 0 }, { 1280, 0 }, 10, 1);
+		Debugger::DrawLine({ 0, 720 }, { 1280, 720 }, 10, 1);
+		Debugger::DrawLine({ 1280, 720 }, { 1280, 0 }, 10, 1);
+		Debugger::DrawLine({ 0, 0 }, { 0, 720 }, 10, 1);
 	}
 	void Destroy() override 
 	{
