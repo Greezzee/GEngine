@@ -173,6 +173,12 @@ bool GraphicManager::Draw(DrawData data, unsigned view_id)
 	text_vert.layer_vertex[data.layer][a + 2].texCoords = sf::Vector2f(spr.sprite_pos.x + frame_offset + spr.size.x, spr.sprite_pos.y + spr.size.y);
 	text_vert.layer_vertex[data.layer][a + 3].texCoords = sf::Vector2f(spr.sprite_pos.x + frame_offset, spr.sprite_pos.y + spr.size.y);
 
+	sf::Color color = sf::Color(data.color.r, data.color.g, data.color.b, data.color.a);
+	text_vert.layer_vertex[data.layer][a].color = color;
+	text_vert.layer_vertex[data.layer][a + 1].color = color;
+	text_vert.layer_vertex[data.layer][a + 2].color = color;
+	text_vert.layer_vertex[data.layer][a + 3].color = color;
+
 	return true;
 }
 

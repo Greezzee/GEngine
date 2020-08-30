@@ -1,4 +1,4 @@
-#include <vld.h>
+//#include <vld.h>
 #include <iostream>
 #include "../Engine/AllEngine.h"
 class TestScene : public Scene
@@ -92,8 +92,8 @@ public:
 
 		a.SetPos(a.GetPos() + speed * 200 * TimeManager::GetDeltaTimeF());
 		a.SetAngle(a.GetAngle() + rot * TimeManager::GetDeltaTimeF());
-		Debugger::DrawCollider(a, 1);
-		Debugger::DrawCollider(b, 1);
+		//Debugger::DrawCollider(a, 1);
+		//Debugger::DrawCollider(b, 1);
 		//Debugger::DrawLine(a.GetPos() + Vector2F(0, a.GetRadius()) - Vector2F(1000, 0), a.GetPos() + Vector2F(0, a.GetRadius()) + Vector2F(1000, 0), 1, 1, Color::Green());
 		//Debugger::DrawLine(a.GetPos() - Vector2F(0, a.GetRadius()) - Vector2F(1000, 0), a.GetPos() - Vector2F(0, a.GetRadius()) + Vector2F(1000, 0), 1, 1, Color::Green());
 
@@ -117,21 +117,22 @@ public:
 
 		
 		DrawData player;
-		player.color = Color::White();
+		Color colors[3] = { Color::Red(), Color::Blue(), Color::Green() };
 		player.layer = 12;
 		player.origin = { 0.5, 0.5 };
 		player.rotation = a.GetAngle() * 180 / PI;
-		player.size = { 200, 200 };
+		player.size = { 100, 100 };
 		player.spriteID = text;
 		player.frame = (int)((float)TimeManager::GetTimeFromLastRestart() / 1000000.f * 4);
 		player.shader = nullptr;
 		
-		for (unsigned i = 0; i < 100; i+= 19)
-			for (unsigned j = 0; j < 100; j+= 19)
+		for (unsigned i = 0; i < 100; i+=19)
+			for (unsigned j = 0; j < 100; j+=19)
 			{
 				player.frame++;
+				player.color = colors[(i + j) % 3];
 				player.position = { 12 * (float)i, 9 * (float)j };
-				//GraphicManager::Draw(player, 1);
+				GraphicManager::Draw(player, 1);
 				//GraphicManager::Draw(player);
 			}
 		
