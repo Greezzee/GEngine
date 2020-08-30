@@ -26,7 +26,7 @@ bool Debugger::DrawLine(Vector2F start, Vector2F end, float thick, unsigned view
 	line.position = (start + end) / 2;
 	line.layer = layer;
 	line.frame = 0;
-	line.rotation = atan2f(end.x - start.x, end.y - start.y) / 3.1415926f * 180;
+	line.rotation = -atan2f(end.x - start.x, end.y - start.y) / 3.1415926f * 180;
 	Vector2F unit = GraphicManager::GetView(view_id)->unit_vector;
 	line.rotation = unit.y * unit.x * line.rotation;
 	line.color = color;

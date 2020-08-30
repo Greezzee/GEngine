@@ -10,8 +10,8 @@ public:
 		//a.Init(Vector2F(100, 100), p);
 		//b.Init(Vector2F(400, 400), 150 * Vector2F(1, 1));
 		//c.Init(Vector2F(680, 500), 75 * Vector2F(1, 1));
-		a.Init(Vector2F(100, 100), 0, Vector2F(100, 50));
-		b.Init(Vector2F(400, 400), PI / 4, Vector2F(200, 50));
+		a.Init(Vector2F(100, 100), Vector2F(50, 50));
+		b.Init(Vector2F(600, 600), Vector2F(200, 200));
 		InputManager::LinkToCode(KeyboardKey::W, 0);
 		InputManager::LinkToCode(KeyboardKey::A, 1);
 		InputManager::LinkToCode(KeyboardKey::S, 2);
@@ -40,7 +40,7 @@ public:
 		//GraphicManager::ClearTextures();
 		text = GraphicManager::LoadSprite(GraphicPrefabData(text_id, Vector2F(32, 32), 2, Vector2F(32, 0)));
 
-		LightManager::SetView(1);
+		LightManager::SetView(0);
 
 		LightManager::SetPixelSize(40);
 		LightManager::SetGlobalLight(Color(100, 100, 100, 0));
@@ -77,7 +77,7 @@ public:
 
 		speed = speed.Normalized();
 
-		auto mouse = GraphicManager::ConvertRealToView(InputManager::GetMousePos(), 1);
+		auto mouse = GraphicManager::ConvertRealToView(InputManager::GetMousePos(), 0);
 
 		LightManager::ClearLightSource();
 		LightData d;
@@ -92,21 +92,21 @@ public:
 
 		a.SetPos(a.GetPos() + speed * 200 * TimeManager::GetDeltaTimeF());
 		a.SetAngle(a.GetAngle() + rot * TimeManager::GetDeltaTimeF());
-		//Debugger::DrawCollider(a, 1);
-		//Debugger::DrawCollider(b, 1);
+		Debugger::DrawCollider(a, 15, 10, 0);
+		Debugger::DrawCollider(b, 15, 10, 0);
 		//Debugger::DrawLine(a.GetPos() + Vector2F(0, a.GetRadius()) - Vector2F(1000, 0), a.GetPos() + Vector2F(0, a.GetRadius()) + Vector2F(1000, 0), 1, 1, Color::Green());
 		//Debugger::DrawLine(a.GetPos() - Vector2F(0, a.GetRadius()) - Vector2F(1000, 0), a.GetPos() - Vector2F(0, a.GetRadius()) + Vector2F(1000, 0), 1, 1, Color::Green());
 
 
-		//float dist = Collider::DistanceBetween(&a, &PolygonCollider(b), { 1, 0 });
-		//printf("%g\n", dist);
+		float dist = Collider::DistanceBetween(&a, &b, { 1, 0 });
+		printf("%g\n", dist);
 		if (Collider::IsCollide((UniversalCollider*)(&a), (UniversalCollider*)(&b))) {
-			//Debugger::DrawLine(a.GetPos(), b.GetPos(), 4, 0, Color::Red());
+			Debugger::DrawLine(a.GetPos(), b.GetPos(), 4, 0, Color::Red());
 		}
 		for (int i = 0; i < 1280; i += 100)
-			Debugger::DrawLine({ (float)i, 0 }, { (float)i, 720 }, 2, 1);
+			Debugger::DrawLine({ (float)i, 0 }, { (float)i, 720 }, 2, 0);
 		for (int i = 0; i < 720; i += 100)
-			Debugger::DrawLine({ 0, (float)i }, {1280, (float)i }, 2, 1);
+			Debugger::DrawLine({ 0, (float)i }, {1280, (float)i }, 2, 0);
 		
 		if (InputManager::IsPressed(KeyboardKey::ESC))
 			SceneManager::CloseScene(this);
@@ -132,7 +132,7 @@ public:
 				player.frame++;
 				player.color = colors[(i + j) % 3];
 				player.position = { 12 * (float)i, 9 * (float)j };
-				GraphicManager::Draw(player, 1);
+				//GraphicManager::Draw(player, 1);
 				//GraphicManager::Draw(player);
 			}
 		
@@ -147,8 +147,8 @@ public:
 		printf("Close!\n");
 	}
 private:
-	EllipseCollider a;
-	EllipseCollider b, c;
+	SquareCollider a;
+	SquareCollider b, c;
 	PixelLightShader x;
 	int text;
 };

@@ -173,10 +173,10 @@ Vector2F Collider::AxisDistance(SquareCollider* a, SquareCollider* b, const Vect
 
 	Vector2F out;
 
-	if (k == 0 && ((min_b <= min_a && min_a <= max_b) || (min_b <= max_a && max_a <= max_b)))
-		return { -INFINITY, INFINITY };
-	if (k == 0)
+	if (k == 0 && (max_a < min_b || max_b < min_a))
 		return { NAN, NAN };
+	if (k == 0)
+		return { -INFINITY, INFINITY };
 
 	out.x = (min_b - max_a) / k;
 	out.y = (max_b - min_a) / k;
@@ -198,8 +198,10 @@ float Collider::DistanceBetween(SquareCollider* a, SquareCollider* b, const Vect
 
 		Vector2F axis_pos_dist = AxisDistance(a, b, norm, direction);
 
-		if (isnan(axis_pos_dist.x) || isnan(axis_pos_dist.y))
+		if (isnan(axis_pos_dist.x) || isnan(axis_pos_dist.y)) {
+			printf("Axis_pos_dist A NAN\n");
 			return NAN;
+		}
 		
 		possible_distance.x = fmaxf(possible_distance.x, axis_pos_dist.x);
 		possible_distance.y = fminf(possible_distance.y, axis_pos_dist.y);
@@ -214,14 +216,18 @@ float Collider::DistanceBetween(SquareCollider* a, SquareCollider* b, const Vect
 			norm = { 1, -side.x / side.y };
 
 		Vector2F axis_pos_dist = AxisDistance(a, b, norm, direction);
-		if (isnan(axis_pos_dist.x) || isnan(axis_pos_dist.y))
+		if (isnan(axis_pos_dist.x) || isnan(axis_pos_dist.y)) {
+			printf("Axis_pos_dist B NAN\n");
 			return NAN;
+		}
 		possible_distance.x = fmaxf(possible_distance.x, axis_pos_dist.x);
 		possible_distance.y = fminf(possible_distance.y, axis_pos_dist.y);
 	}
 
-	if (possible_distance.x > possible_distance.y)
+	if (possible_distance.x > possible_distance.y) {
+		printf("x > y NAN\n");
 		return NAN;
+	}
 
 	if (possible_distance.x <= 0 && possible_distance.y >= 0)
 		return 0;
@@ -232,6 +238,7 @@ float Collider::DistanceBetween(SquareCollider* a, SquareCollider* b, const Vect
 	if (possible_distance.x >= 0 && possible_distance.y >= 0)
 		return possible_distance.x;
 
+	printf("Exit NAN\n");
 	return NAN;
 }
 
@@ -675,10 +682,10 @@ Vector2F Collider::AxisDistance(PolygonCollider* a, PolygonCollider* b, const Ve
 
 	Vector2F out;
 
-	if (k == 0 && ((min_b <= min_a && min_a <= max_b) || (min_b <= max_a && max_a <= max_b)))
-		return { -INFINITY, INFINITY };
-	if (k == 0)
+	if (k == 0 && (max_a < min_b || max_b < min_a))
 		return { NAN, NAN };
+	if (k == 0)
+		return { -INFINITY, INFINITY };
 
 	out.x = (min_b - max_a) / k;
 	out.y = (max_b - min_a) / k;
