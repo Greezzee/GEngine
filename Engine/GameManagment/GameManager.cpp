@@ -5,39 +5,40 @@
 #include "../Control/InputManager.h"
 #include <stdio.h>
 #include "../SceneManagment/SceneManager.h"
+namespace ge {
+	bool GameManager::is_exit;
 
-bool GameManager::is_exit;
-
-void GameManager::Init()
-{
-	GraphicManager::Init();
-	TimeManager::Init();
-	InputManager::Init();
-}
-
-void GameManager::Launch(Scene* start_scene)
-{
-	is_exit = false;
-
-	// INIT
-	//------------------------------
-	SceneManager::OpenScene(start_scene);
-	//------------------------------
-
-	while (!is_exit) {
-		// UPDATE
-		//------------------------------
-		TimeManager::Update();
-		InputManager::Update();
-		//------------------------------
-
-		is_exit = is_exit || SceneManager::UpdateScenes();
-		is_exit = is_exit || GraphicManager::Update();
+	void GameManager::Init()
+	{
+		GraphicManager::Init();
+		TimeManager::Init();
+		InputManager::Init();
 	}
 
-	// DESTROY
-	//------------------------------
-	SceneManager::Destroy();
-	GraphicManager::Exit();
-	//------------------------------
+	void GameManager::Launch(Scene* start_scene)
+	{
+		is_exit = false;
+
+		// INIT
+		//------------------------------
+		SceneManager::OpenScene(start_scene);
+		//------------------------------
+
+		while (!is_exit) {
+			// UPDATE
+			//------------------------------
+			TimeManager::Update();
+			InputManager::Update();
+			//------------------------------
+
+			is_exit = is_exit || SceneManager::UpdateScenes();
+			is_exit = is_exit || GraphicManager::Update();
+		}
+
+		// DESTROY
+		//------------------------------
+		SceneManager::Destroy();
+		GraphicManager::Exit();
+		//------------------------------
+	}
 }

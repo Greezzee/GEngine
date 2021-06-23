@@ -12,17 +12,18 @@
 * СИСТЕМНОЕ
 */
 
+namespace ge {
+	class GameManager
+	{
+	public:
+		static void Init(); //! Инициализация всех менеджеров
 
-class GameManager
-{
-public:
-	static void Init(); //! Инициализация всех менеджеров
-
-	static void Launch(Scene* start_scene); //! Главный цикл. Запуск первой сцены
+		static void Launch(Scene* start_scene); //! Главный цикл. Запуск первой сцены
 
 
-private:
-	static bool is_exit; //! Указывает, был ли совершён выход из игры закрытием окна или иным другим
+	private:
+		static bool is_exit; //! Указывает, был ли совершён выход из игры закрытием окна или иным другим
 
-};
+	};
+}
 

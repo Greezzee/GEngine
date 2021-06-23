@@ -12,15 +12,17 @@ namespace tge
 	};
 }
 
-class UniversalCollider
-{
-public:
-	UniversalCollider() :
-		_type(tge::ColliderType::ERROR_COLLIDER) {}
+namespace ge {
+	class UniversalCollider
+	{
+	public:
+		UniversalCollider() :
+			_type(tge::ColliderType::ERROR_COLLIDER) {}
 
-	virtual ~UniversalCollider() {}
-protected:
-	tge::ColliderType _type;
+		virtual ~UniversalCollider() {}
+	protected:
+		tge::ColliderType _type;
 
-	friend class Collider;
-};
+		friend class Collider;
+	};
+}

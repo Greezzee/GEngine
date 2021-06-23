@@ -9,15 +9,16 @@ namespace tge {
 		BlurShader
 	};
 }
+namespace ge {
+	class Shader
+	{
+	public:
+		Shader() :
+			_type(tge::ShaderType::EmptyShader) {}
+		virtual ~Shader() {}
 
-class Shader
-{
-public:
-	Shader() :
-		_type(tge::ShaderType::EmptyShader) {}
-	virtual ~Shader() {}
-
-protected:
-	tge::ShaderType _type;
-	friend class ShaderManager;
-};
+	protected:
+		tge::ShaderType _type;
+		friend class ShaderManager;
+	};
+}

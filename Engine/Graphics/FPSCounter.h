@@ -2,8 +2,6 @@
 #include "../Time/TimeManager.h"
 #include <stdio.h>
 
-class GraphicManager;
-
 namespace tge
 {
 	class FPSCounter

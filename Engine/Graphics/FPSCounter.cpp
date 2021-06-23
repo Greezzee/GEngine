@@ -2,7 +2,7 @@
 
 void tge::FPSCounter::Update()
 {
-	_sec += TimeManager::GetDeltaTimeF();
+	_sec += ge::TimeManager::GetDeltaTimeF();
 	_frames++;
 	if (_sec >= 1.f) {
 		if (is_active)
